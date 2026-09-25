@@ -149,6 +149,9 @@
 
               <StackPanel Grid.Column="2" Orientation="Horizontal" ClipToBounds="True">
                 <TextBlock VerticalAlignment="Center" Text="{Binding Name}"/>
+                <Border Classes="svn_tag" Margin="6,0,2,0" IsVisible="{Binding IsSvnRepository}">
+                  <TextBlock Text="SVN"/>
+                </Border>
                 <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource Brush.FG2}" Text="{Binding Id, StringFormat=({0}), Converter={x:Static c:PathConverters.RelativeToHome}}">
                   <TextBlock.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">

@@ -65,6 +65,13 @@ namespace SourceGit.ViewModels
         }
 
         [JsonIgnore]
+        public bool IsSvnRepository
+        {
+            get => _isSvnRepository;
+            private set => SetProperty(ref _isSvnRepository, value);
+        }
+
+        [JsonIgnore]
         public bool IsUnmanaged
         {
             get;
@@ -181,7 +188,8 @@ namespace SourceGit.ViewModels
 
             _lastUpdateStatus = DateTime.Now;
 
-            if (Commands.SvnQueryInfo.IsWorkingCopy(_id))
+            IsSvnRepository = Commands.SvnQueryInfo.IsWorkingCopy(_id);
+            if (IsSvnRepository)
             {
                 Status = await QuerySvnStatusAsync();
                 return;
@@ -254,6 +262,7 @@ namespace SourceGit.ViewModels
         private int _bookmark = 0;
         private bool _isExpanded = false;
         private bool _isVisible = true;
+        private bool _isSvnRepository = false;
         private Models.RepositoryStatus _status = null;
         private DateTime _lastUpdateStatus = DateTime.UnixEpoch.ToLocalTime();
     }

@@ -16,7 +16,16 @@ namespace SourceGit.ViewModels
         public object Data
         {
             get => _data;
-            set => SetProperty(ref _data, value);
+            set
+            {
+                if (SetProperty(ref _data, value))
+                    OnPropertyChanged(nameof(IsSvnRepository));
+            }
+        }
+
+        public bool IsSvnRepository
+        {
+            get => _data is SvnRepository;
         }
 
         public Models.DirtyState DirtyState

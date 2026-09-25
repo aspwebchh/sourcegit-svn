@@ -96,7 +96,7 @@
 
                   <Grid Grid.Column="1"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
-                        ColumnDefinitions="Auto,*"
+                        ColumnDefinitions="Auto,*,Auto"
                         IsHitTestVisible="False"
                         IsVisible="{Binding Node.IsRepository}">
                     <Ellipse Grid.Column="0"
@@ -112,6 +112,13 @@
                                TextAlignment="Center"
                                Text="{Binding Node.Name}"
                                IsHitTestVisible="False"/>
+
+                    <Border Grid.Column="2"
+                            Classes="svn_tag"
+                            Margin="6,0,0,0"
+                            IsVisible="{Binding IsSvnRepository}">
+                      <TextBlock Text="SVN"/>
+                    </Border>
                   </Grid>
 
                   <TextBlock Grid.Column="1"
