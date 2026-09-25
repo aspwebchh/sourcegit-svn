@@ -1013,7 +1013,6 @@
   <x:String x:Key="Text.Svn.NotConfigured" xml:space="preserve">未配置 SVN 可执行文件，请先在【偏好设置】>【GIT】>【SVN】中设置。</x:String>
   <x:String x:Key="Text.Svn.OpenInFileManager" xml:space="preserve">在文件浏览器中打开</x:String>
   <x:String x:Key="Text.Svn.OpenInTerminal" xml:space="preserve">在终端中打开</x:String>
-  <x:String x:Key="Text.Svn.Refresh" xml:space="preserve">刷新</x:String>
   <x:String x:Key="Text.Svn.Revert" xml:space="preserve">还原</x:String>
   <x:String x:Key="Text.Svn.Revert.Total" xml:space="preserve">共计 {0} 项修改</x:String>
   <x:String x:Key="Text.Svn.Revert.Warning" xml:space="preserve">选中项的本地修改将会丢失！</x:String>

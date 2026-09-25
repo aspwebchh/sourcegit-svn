@@ -1009,7 +1009,6 @@
   <x:String x:Key="Text.Svn.NotConfigured" xml:space="preserve">SVN executable is NOT configured. Please set it in [Preferences] > [GIT] > [SVN] first.</x:String>
   <x:String x:Key="Text.Svn.OpenInFileManager" xml:space="preserve">Open in File Browser</x:String>
   <x:String x:Key="Text.Svn.OpenInTerminal" xml:space="preserve">Open in Terminal</x:String>
-  <x:String x:Key="Text.Svn.Refresh" xml:space="preserve">Refresh</x:String>
   <x:String x:Key="Text.Svn.Revert" xml:space="preserve">Revert</x:String>
   <x:String x:Key="Text.Svn.Revert.Total" xml:space="preserve">Total {0} changes</x:String>
   <x:String x:Key="Text.Svn.Revert.Warning" xml:space="preserve">Local modifications of the selected items will be lost!</x:String>

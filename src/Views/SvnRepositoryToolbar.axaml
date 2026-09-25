@@ -33,17 +33,6 @@
         </Grid>
       </Button>
 
-      <Button Classes="icon_button" Width="32" Margin="16,0,0,0" Command="{Binding RefreshAll}">
-        <ToolTip.Tip>
-          <TextBlock>
-            <Run Text="{DynamicResource Text.Svn.Refresh}"/>
-            <Run Text=" "/>
-            <Run Text="F5" FontSize="11" Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}"/>
-          </TextBlock>
-        </ToolTip.Tip>
-        <Path Width="14" Height="14" Data="{StaticResource Icons.Loading}"/>
-      </Button>
-
       <Button Classes="icon_button" Width="32" Margin="16,0,0,0" Command="{Binding Authenticate}" ToolTip.Tip="{DynamicResource Text.Svn.Authenticate}">
         <Path Width="14" Height="14" Data="{StaticResource Icons.User}"/>
       </Button>
