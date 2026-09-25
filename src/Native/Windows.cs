@@ -101,6 +101,28 @@ namespace SourceGit.Native
             return null;
         }
 
+        public string FindSvnExecutable()
+        {
+            var reg = Microsoft.Win32.RegistryKey.OpenBaseKey(
+                Microsoft.Win32.RegistryHive.LocalMachine,
+                Microsoft.Win32.RegistryView.Registry64);
+
+            var tsvn = reg.OpenSubKey(@"SOFTWARE\TortoiseSVN");
+            if (tsvn?.GetValue("Directory") is string tsvnDir)
+            {
+                var svn = Path.Combine(tsvnDir, "bin", "svn.exe");
+                if (File.Exists(svn))
+                    return svn;
+            }
+
+            var builder = new StringBuilder("svn.exe", 259);
+            if (!PathFindOnPath(builder, null))
+                return null;
+
+            var exePath = builder.ToString();
+            return string.IsNullOrEmpty(exePath) ? null : exePath;
+        }
+
         public string FindTerminal(Models.ShellOrTerminal shell)
         {
             switch (shell.Type)

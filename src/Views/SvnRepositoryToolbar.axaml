@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SourceGit.ViewModels"
+             xmlns:v="using:SourceGit.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="36"
+             x:Class="SourceGit.Views.SvnRepositoryToolbar"
+             x:DataType="vm:SvnRepository">
+  <Grid ColumnDefinitions="*,Auto,*">
+    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="4,0,0,0">
+      <Button Classes="icon_button" Width="32" Command="{Binding OpenInFileManager}" ToolTip.Tip="{DynamicResource Text.Svn.OpenInFileManager}">
+        <Path Width="14" Height="14" Data="{StaticResource Icons.Explore}"/>
+      </Button>
+
+      <Button Classes="icon_button" Width="32" Command="{Binding OpenInTerminal}" ToolTip.Tip="{DynamicResource Text.Svn.OpenInTerminal}">
+        <Path Width="14" Height="14" Data="{StaticResource Icons.Terminal}"/>
+      </Button>
+    </StackPanel>
+
+    <StackPanel Grid.Column="1" Orientation="Horizontal">
+      <Button Classes="icon_button" Width="32" Tapped="OnUpdateTapped" IsEnabled="{Binding !IsUpdating}">
+        <ToolTip.Tip>
+          <StackPanel Orientation="Vertical">
+            <TextBlock Text="{DynamicResource Text.Svn.Update}"/>
+            <TextBlock Classes="small italic" Margin="0,4,0,0" Text="{DynamicResource Text.Svn.Update.CtrlClickTip}" Foreground="{DynamicResource Brush.FG2}"/>
+          </StackPanel>
+        </ToolTip.Tip>
+
+        <Grid>
+          <Path Width="14" Height="14" Data="{StaticResource Icons.Pull}" IsVisible="{Binding !IsUpdating}"/>
+          <v:LoadingIcon Width="14" Height="14" IsVisible="{Binding IsUpdating}"/>
+        </Grid>
+      </Button>
+
+      <Button Classes="icon_button" Width="32" Margin="16,0,0,0" Command="{Binding RefreshAll}">
+        <ToolTip.Tip>
+          <TextBlock>
+            <Run Text="{DynamicResource Text.Svn.Refresh}"/>
+            <Run Text=" "/>
+            <Run Text="F5" FontSize="11" Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}"/>
+          </TextBlock>
+        </ToolTip.Tip>
+        <Path Width="14" Height="14" Data="{StaticResource Icons.Loading}"/>
+      </Button>
+
+      <Button Classes="icon_button" Width="32" Margin="16,0,0,0" Command="{Binding Authenticate}" ToolTip.Tip="{DynamicResource Text.Svn.Authenticate}">
+        <Path Width="14" Height="14" Data="{StaticResource Icons.User}"/>
+      </Button>
+    </StackPanel>
+
+    <Grid Grid.Column="2" HorizontalAlignment="Right" ColumnDefinitions="Auto,*,Auto" Margin="0,0,12,0">
+      <Path Grid.Column="0"
+            Width="13" Height="13"
+            Margin="18,0,0,0"
+            Data="{StaticResource Icons.Remote}"/>
+
+      <Border Grid.Column="1"
+              Margin="6,0,0,0"
+              Background="Transparent"
+              ToolTip.Tip="{Binding Info.Url, FallbackValue='--', Mode=OneWay}">
+        <TextBlock Text="{Binding RelativeUrl, Mode=OneWay}"
+                   TextTrimming="CharacterEllipsis"/>
+      </Border>
+
+      <Border Grid.Column="2"
+              Margin="8,0,0,0" Padding="6,0"
+              Height="18"
+              CornerRadius="9"
+              Background="{DynamicResource Brush.Accent}"
+              IsVisible="{Binding Info, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <TextBlock Text="{Binding RevisionName, Mode=OneWay}"
+                   FontFamily="{DynamicResource Fonts.Monospace}"
+                   FontSize="11"
+                   Foreground="White"
+                   VerticalAlignment="Center"/>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

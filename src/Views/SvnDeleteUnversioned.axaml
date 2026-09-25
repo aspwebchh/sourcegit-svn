@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SourceGit.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+             x:Class="SourceGit.Views.SvnDeleteUnversioned"
+             x:DataType="vm:SvnDeleteUnversioned">
+  <StackPanel Orientation="Vertical" Margin="8,0,0,0">
+    <StackPanel Orientation="Horizontal">
+      <Path Width="16" Height="16" Data="{StaticResource Icons.Clean}"/>
+      <TextBlock FontSize="18"
+                 Margin="8,0,0,0"
+                 Classes="bold"
+                 Text="{DynamicResource Text.Svn.WorkingCopy.DeleteUnversioned}"/>
+    </StackPanel>
+
+    <Grid Margin="0,16,8,8" RowDefinitions="32,Auto" ColumnDefinitions="120,*">
+      <TextBlock Grid.Row="0" Grid.Column="0"
+                 Margin="0,0,8,0"
+                 HorizontalAlignment="Right" VerticalAlignment="Center"
+                 Text="{DynamicResource Text.Discard.Changes}"/>
+      <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+        <Path Width="12" Height="12" Data="{StaticResource Icons.File}"/>
+        <TextBlock Margin="4,0,0,0" Text="{Binding Description}" TextTrimming="CharacterEllipsis"/>
+      </StackPanel>
+
+      <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="Auto,*" Margin="0,6,0,0">
+        <Path Grid.Column="0"
+              Width="14" Height="14"
+              Data="{StaticResource Icons.Error}"
+              Fill="DarkOrange"/>
+        <TextBlock Grid.Column="1" Margin="8,0,0,0"
+                   Text="{DynamicResource Text.Svn.DeleteUnversioned.Warning}"
+                   TextWrapping="Wrap"
+                   Foreground="DarkOrange"/>
+      </Grid>
+    </Grid>
+  </StackPanel>
+</UserControl>

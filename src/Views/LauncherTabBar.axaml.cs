@@ -370,6 +370,42 @@ namespace SourceGit.Views
 
                     menu.Items.Add(new MenuItem() { Header = "-" });
                 }
+                else if (vm.ActivePage.Data is ViewModels.SvnRepository svn)
+                {
+                    var refresh = new MenuItem();
+                    refresh.Header = App.Text("PageTabBar.Tab.Refresh");
+                    refresh.Icon = this.CreateMenuIcon("Icons.Loading");
+                    refresh.Tag = "F5";
+                    refresh.Click += (_, ev) =>
+                    {
+                        svn.RefreshAll();
+                        ev.Handled = true;
+                    };
+                    menu.Items.Add(refresh);
+
+                    var copyPath = new MenuItem();
+                    copyPath.Header = App.Text("PageTabBar.Tab.CopyPath");
+                    copyPath.Icon = this.CreateMenuIcon("Icons.Copy");
+                    copyPath.Click += async (_, ev) =>
+                    {
+                        var dir = new DirectoryInfo(svn.FullPath);
+                        await this.CopyTextAsync(dir.FullName);
+                        ev.Handled = true;
+                    };
+                    menu.Items.Add(copyPath);
+                    menu.Items.Add(new MenuItem() { Header = "-" });
+
+                    var edit = new MenuItem();
+                    edit.Header = App.Text("PageTabBar.Tab.Edit");
+                    edit.Icon = this.CreateMenuIcon("Icons.Edit");
+                    edit.Click += (_, ev) =>
+                    {
+                        page.Node.Edit();
+                        ev.Handled = true;
+                    };
+                    menu.Items.Add(edit);
+                    menu.Items.Add(new MenuItem() { Header = "-" });
+                }
 
                 var close = new MenuItem();
                 close.Header = App.Text("PageTabBar.Tab.Close");

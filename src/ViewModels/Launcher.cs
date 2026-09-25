@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 using Avalonia.Collections;
 using Avalonia.Threading;
@@ -101,6 +102,15 @@ namespace SourceGit.ViewModels
                 }
                 else
                 {
+                    var svnFolder = Task.Run(() => Commands.SvnQueryInfo.FindWorkingCopyFolderAsync(repo)).GetAwaiter().GetResult();
+                    if (!string.IsNullOrEmpty(svnFolder))
+                    {
+                        var node = Preferences.Instance.FindOrAddNodeByRepositoryPath(svnFolder, null, false);
+                        Welcome.Instance.Refresh();
+                        OpenRepositoryInTab(node, null);
+                        return true;
+                    }
+
                     if (ActivePage is not { Data: Welcome { }, Popup: null })
                         AddNewTab();
 
@@ -178,6 +188,8 @@ namespace SourceGit.ViewModels
             {
                 if (p.Data is Repository r)
                     _activeWorkspace.Repositories.Add(r.FullPath);
+                else if (p.Data is SvnRepository svn)
+                    _activeWorkspace.Repositories.Add(svn.FullPath);
             }
 
             _ignoreIndexChange = false;
@@ -217,6 +229,21 @@ namespace SourceGit.ViewModels
                     if (last.Node.IsUnmanaged)
                         last.Node.SaveMinimalInfo(repo.GitDir);
                     repo.Close();
+
+                    Welcome.Instance.ClearSearchFilter();
+                    last.Node = new RepositoryNode() { Id = Guid.NewGuid().ToString() };
+                    last.Data = Welcome.Instance;
+                    last.Popup?.Cleanup();
+                    last.Popup = null;
+
+                    PostActivePageChanged();
+                    GC.Collect();
+                }
+                else if (last.Data is SvnRepository svn)
+                {
+                    _activeWorkspace.Repositories.Clear();
+                    _activeWorkspace.ActiveIdx = 0;
+                    svn.Close();
 
                     Welcome.Instance.ClearSearchFilter();
                     last.Node = new RepositoryNode() { Id = Guid.NewGuid().ToString() };
@@ -321,6 +348,13 @@ namespace SourceGit.ViewModels
                 return;
             }
 
+            // SVN working copies (or their sub-folders) that are not git repositories are opened by a separate page.
+            if (Commands.SvnQueryInfo.IsWorkingCopy(node.Id))
+            {
+                OpenSvnRepositoryInTab(node, page);
+                return;
+            }
+
             var isBare = new Commands.IsBareRepository(node.Id).GetResult();
             var gitDir = isBare ? node.Id : GetRepositoryGitDir(node.Id);
             if (string.IsNullOrEmpty(gitDir))
@@ -365,6 +399,59 @@ namespace SourceGit.ViewModels
             {
                 if (p.Data is Repository r)
                     _activeWorkspace.Repositories.Add(r.FullPath);
+                else if (p.Data is SvnRepository svn)
+                    _activeWorkspace.Repositories.Add(svn.FullPath);
+            }
+
+            if (_activePage == page)
+                PostActivePageChanged();
+            else
+                ActivePage = page;
+        }
+
+        private void OpenSvnRepositoryInTab(RepositoryNode node, LauncherPage page)
+        {
+            if (!Preferences.Instance.IsSvnConfigured())
+            {
+                ActivePage.Notifications.Add(new Models.Notification
+                {
+                    Group = node.Id,
+                    Message = App.Text("Svn.NotConfigured"),
+                    IsError = true,
+                });
+                return;
+            }
+
+            var repo = new SvnRepository(node.Id);
+            repo.Open();
+
+            if (page == null)
+            {
+                if (_activePage == null || _activePage.Node.IsRepository)
+                {
+                    page = new LauncherPage(node, repo);
+                    Pages.Add(page);
+                }
+                else
+                {
+                    page = _activePage;
+                    page.Node = node;
+                    page.Data = repo;
+                }
+            }
+            else
+            {
+                page.Node = node;
+                page.Data = repo;
+            }
+
+            _activeWorkspace.Repositories.Clear();
+            foreach (var p in Pages)
+            {
+                if (p.Data is Repository r)
+                    _activeWorkspace.Repositories.Add(r.FullPath);
+                else if (p.Data is SvnRepository svn)
+                    _activeWorkspace.Repositories.Add(svn.FullPath);
             }
 
             if (_activePage == page)
@@ -509,6 +596,13 @@ namespace SourceGit.ViewModels
 
                 repo.Close();
             }
+            else if (page.Data is SvnRepository svn)
+            {
+                if (removeFromWorkspace)
+                    _activeWorkspace.Repositories.Remove(svn.FullPath);
+
+                svn.Close();
+            }
 
             page.Popup?.Cleanup();
             page.Popup = null;
@@ -522,6 +616,8 @@ namespace SourceGit.ViewModels
 
             if (_activePage is { Data: Repository repo })
                 _activeWorkspace.ActiveIdx = _activeWorkspace.Repositories.IndexOf(repo.FullPath);
+            else if (_activePage is { Data: SvnRepository svn })
+                _activeWorkspace.ActiveIdx = _activeWorkspace.Repositories.IndexOf(svn.FullPath);
 
             var builder = new StringBuilder(512);
             builder.Append(string.IsNullOrEmpty(_activePage.Node.Name) ? "Repositories" : _activePage.Node.Name);

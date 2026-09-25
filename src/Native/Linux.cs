@@ -95,6 +95,11 @@ namespace SourceGit.Native
             return FindExecutable("git");
         }
 
+        public string FindSvnExecutable()
+        {
+            return FindExecutable("svn");
+        }
+
         public string FindTerminal(Models.ShellOrTerminal shell)
         {
             if (shell.Type.Equals("custom", StringComparison.Ordinal))

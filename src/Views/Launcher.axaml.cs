@@ -173,6 +173,8 @@ namespace SourceGit.Views
             {
                 if (vm.ActivePage.Data is ViewModels.Repository repo)
                     Native.OS.OpenTerminal(repo.FullPath);
+                else if (vm.ActivePage.Data is ViewModels.SvnRepository svn)
+                    Native.OS.OpenTerminal(svn.FullPath);
                 else
                     ViewModels.Welcome.Instance.OpenTerminal();
 
@@ -304,6 +306,12 @@ namespace SourceGit.Views
                 if (vm.ActivePage.Data is ViewModels.Repository repo)
                 {
                     repo.RefreshAll();
+                    e.Handled = true;
+                    return;
+                }
+                else if (vm.ActivePage.Data is ViewModels.SvnRepository svn)
+                {
+                    svn.RefreshAll();
                     e.Handled = true;
                     return;
                 }

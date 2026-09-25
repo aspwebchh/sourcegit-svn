@@ -38,6 +38,21 @@ namespace SourceGit.Commands
         private const int MAX_INLINE_CONTENT_LENGTH = 1024;
         private const int MAX_INLINE_CHUNKS_PER_LINE = 16;
 
+        /// <summary>
+        ///     Parses the given unified-diff output (produced by other tools, such as `svn diff`) into DiffResult.
+        /// </summary>
+        public static Models.DiffResult ParseUnified(byte[] data)
+        {
+            var parser = new Diff();
+            parser.ParseBuffer(new ArraySegment<byte>(data));
+            return parser.Finish();
+        }
+
+        private Diff()
+        {
+            _result.TextDiff = new Models.TextDiff();
+        }
+
         public Diff(string repo, Models.DiffOption opt, int numContextLines, bool ignoreWhitespace, bool ignoreCRAtEOL)
         {
             _result.TextDiff = new Models.TextDiff();
@@ -69,25 +84,7 @@ namespace SourceGit.Commands
                 await proc.StandardOutput.BaseStream.CopyToAsync(ms, CancellationToken).ConfigureAwait(false);
 
                 if (ms.TryGetBuffer(out var buffer))
-                {
-                    var start = buffer.Offset;
-                    var end = buffer.Offset + buffer.Count;
-                    while (start < end)
-                    {
-                        var lineEnd = Array.IndexOf(buffer.Array, (byte)'\n', start);
-                        if (lineEnd < 0)
-                        {
-                            ParseLine(buffer[start..]);
-                            break;
-                        }
-
-                        ParseLine(buffer[start..lineEnd]);
-                        if (_result.IsBinary)
-                            break;
-
-                        start = lineEnd + 1;
-                    }
-                }
+                    ParseBuffer(buffer);
 
                 await proc.WaitForExitAsync(CancellationToken).ConfigureAwait(false);
             }
@@ -96,6 +93,32 @@ namespace SourceGit.Commands
                 // Ignore exceptions.
             }
 
+            return Finish();
+        }
+
+        private void ParseBuffer(ArraySegment<byte> buffer)
+        {
+            var start = buffer.Offset;
+            var end = buffer.Offset + buffer.Count;
+            while (start < end)
+            {
+                var lineEnd = Array.IndexOf(buffer.Array, (byte)'\n', start);
+                if (lineEnd < 0)
+                {
+                    ParseLine(buffer[start..]);
+                    break;
+                }
+
+                ParseLine(buffer[start..lineEnd]);
+                if (_result.IsBinary)
+                    break;
+
+                start = lineEnd + 1;
+            }
+        }
+
+        private Models.DiffResult Finish()
+        {
             if (_isLFS || _result.IsBinary || _result.TextDiff.Lines.Count == 0)
             {
                 _result.TextDiff = null;

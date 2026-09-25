@@ -180,7 +180,31 @@ namespace SourceGit.ViewModels
             }
 
             _lastUpdateStatus = DateTime.Now;
+
+            if (Commands.SvnQueryInfo.IsWorkingCopy(_id))
+            {
+                Status = await QuerySvnStatusAsync();
+                return;
+            }
+
             Status = await new Commands.QueryRepositoryStatus(_id).GetResultAsync();
+        }
+
+        private async Task<Models.RepositoryStatus> QuerySvnStatusAsync()
+        {
+            if (!Preferences.Instance.IsSvnConfigured())
+                return null;
+
+            var info = await new Commands.SvnQueryInfo(_id).GetResultAsync();
+            if (info == null)
+                return null;
+
+            var changes = await new Commands.SvnQueryStatus(_id).GetResultAsync();
+            return new Models.RepositoryStatus()
+            {
+                CurrentBranch = info.RelativeUrl,
+                LocalChanges = changes.Count,
+            };
         }
 
         public void LoadMinimalInfo(string gitDir)

@@ -52,6 +52,12 @@ namespace SourceGit.ViewModels
             _data = repo;
         }
 
+        public LauncherPage(RepositoryNode node, SvnRepository repo)
+        {
+            _node = node;
+            _data = repo;
+        }
+
         public void ClearNotifications()
         {
             Notifications.Clear();

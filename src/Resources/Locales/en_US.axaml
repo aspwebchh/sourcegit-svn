@@ -12,11 +12,6 @@
   <x:String x:Key="Text.AddWorktree.Location.Placeholder" xml:space="preserve">Path for this worktree. Relative path is supported.</x:String>
   <x:String x:Key="Text.AddWorktree.Name" xml:space="preserve">Branch Name:</x:String>
   <x:String x:Key="Text.AddWorktree.Name.Placeholder" xml:space="preserve">Optional. Default is the destination folder name.</x:String>
-  <x:String x:Key="Text.AddWorktree.Tracking" xml:space="preserve">Track Branch:</x:String>
-  <x:String x:Key="Text.AddWorktree.Tracking.Toggle" xml:space="preserve">Tracking remote branch</x:String>
-  <x:String x:Key="Text.AddWorktree.WhatToCheckout" xml:space="preserve">What to Checkout:</x:String>
-  <x:String x:Key="Text.AddWorktree.WhatToCheckout.CreateNew" xml:space="preserve">Create New Branch</x:String>
-  <x:String x:Key="Text.AddWorktree.WhatToCheckout.Existing" xml:space="preserve">Existing Branch</x:String>
   <x:String x:Key="Text.AIAssistant" xml:space="preserve">AI Assistant</x:String>
   <x:String x:Key="Text.AIAssistant.Model" xml:space="preserve">MODEL</x:String>
   <x:String x:Key="Text.AIAssistant.Regen" xml:space="preserve">RE-GENERATE</x:String>
@@ -63,6 +58,7 @@
   <x:String x:Key="Text.Blame.Tips" xml:space="preserve">Holding Ctrl (on Windows/Linux) or ⌘ (on macOS) when clicking commit SHA will rebuild blame data based on that revision.</x:String>
   <x:String x:Key="Text.Blame.TypeNotSupported" xml:space="preserve">BLAME ON THIS FILE IS NOT SUPPORTED!!!</x:String>
   <x:String x:Key="Text.BranchCM.Checkout" xml:space="preserve">Checkout ${0}$...</x:String>
+  <x:String x:Key="Text.BranchCM.CheckoutAsWorktree" xml:space="preserve">Checkout ${0}$ as worktree...</x:String>
   <x:String x:Key="Text.BranchCM.CompareTwo" xml:space="preserve">Compare selected 2 branches</x:String>
   <x:String x:Key="Text.BranchCM.CompareWith" xml:space="preserve">Compare with...</x:String>
   <x:String x:Key="Text.BranchCM.CompareWithHead" xml:space="preserve">Compare with HEAD</x:String>
@@ -119,6 +115,14 @@
   <x:String x:Key="Text.Checkout.WarnUpdatingSubmodules" xml:space="preserve">The following submodules need to be updated:{0}Do you want to update them?</x:String>
   <x:String x:Key="Text.Checkout.WithFastForward" xml:space="preserve">Checkout &amp; Fast-Forward</x:String>
   <x:String x:Key="Text.Checkout.WithFastForward.Upstream" xml:space="preserve">Fast-Forward to:</x:String>
+  <x:String x:Key="Text.CheckoutAsWorktree" xml:space="preserve">Checkout Branch as Worktree</x:String>
+  <x:String x:Key="Text.CheckoutAsWorktree.LocalBranch" xml:space="preserve">Local Branch:</x:String>
+  <x:String x:Key="Text.CheckoutAsWorktree.NewBranchName" xml:space="preserve">New Branch Name:</x:String>
+  <x:String x:Key="Text.CheckoutAsWorktree.NewBranchName.Placeholder" xml:space="preserve">Optional. Default is the destination folder name.</x:String>
+  <x:String x:Key="Text.CheckoutAsWorktree.RemoteBranch" xml:space="preserve">Remote Branch:</x:String>
+  <x:String x:Key="Text.CheckoutAsWorktree.Tracking" xml:space="preserve">Tracking this remote branch.</x:String>
+  <x:String x:Key="Text.CheckoutAsWorktree.WorktreePath" xml:space="preserve">Worktree Path:</x:String>
+  <x:String x:Key="Text.CheckoutAsWorktree.WorktreePath.Placeholder" xml:space="preserve">Path for this worktree. Relative path is supported.</x:String>
   <x:String x:Key="Text.CheckoutBranchFromStash" xml:space="preserve">Checkout Branch From Stash</x:String>
   <x:String x:Key="Text.CheckoutBranchFromStash.Branch" xml:space="preserve">New Branch:</x:String>
   <x:String x:Key="Text.CheckoutBranchFromStash.Stash" xml:space="preserve">Stash:</x:String>
@@ -200,7 +204,6 @@
   <x:String x:Key="Text.CommitDetail.Info.SHA" xml:space="preserve">SHA</x:String>
   <x:String x:Key="Text.CommitDetail.Info.Signer" xml:space="preserve">Signer:</x:String>
   <x:String x:Key="Text.CommitDetail.Info.WebLinks" xml:space="preserve">Open in Browser</x:String>
-  <x:String x:Key="Text.CommitMessageTextBox.Column" xml:space="preserve">COL</x:String>
   <x:String x:Key="Text.CommitMessageTextBox.Placeholder" xml:space="preserve">Enter commit message. Please use an empty-line to separate subject and description!</x:String>
   <x:String x:Key="Text.CommitMessageTextBox.SubjectCount" xml:space="preserve">SUBJECT</x:String>
   <x:String x:Key="Text.Compare" xml:space="preserve">Compare</x:String>
@@ -733,6 +736,10 @@
   <x:String x:Key="Text.Preferences.Shell.Args.Tip" xml:space="preserve">Please use '.' to indicate working directory</x:String>
   <x:String x:Key="Text.Preferences.Shell.Path" xml:space="preserve">Path</x:String>
   <x:String x:Key="Text.Preferences.Shell.Type" xml:space="preserve">Shell/Terminal</x:String>
+  <x:String x:Key="Text.Preferences.Svn" xml:space="preserve">SVN</x:String>
+  <x:String x:Key="Text.Preferences.Svn.Path" xml:space="preserve">Executable Path</x:String>
+  <x:String x:Key="Text.Preferences.Svn.Path.Placeholder" xml:space="preserve">Path to svn executable (e.g. TortoiseSVN command line tools)</x:String>
+  <x:String x:Key="Text.Preferences.Svn.Version" xml:space="preserve">SVN version</x:String>
   <x:String x:Key="Text.PruneRemote" xml:space="preserve">Prune Remote</x:String>
   <x:String x:Key="Text.PruneRemote.Target" xml:space="preserve">Target:</x:String>
   <x:String x:Key="Text.PruneWorktrees" xml:space="preserve">Prune Worktrees</x:String>
@@ -978,6 +985,52 @@
   <x:String x:Key="Text.SubmoduleRevisionCompare" xml:space="preserve">Submodule Change Details</x:String>
   <x:String x:Key="Text.SubmoduleRevisionCompare.OpenDetails" xml:space="preserve">OPEN DETAILS</x:String>
   <x:String x:Key="Text.Sure" xml:space="preserve">OK</x:String>
+  <x:String x:Key="Text.Svn.Authenticate" xml:space="preserve">Credentials</x:String>
+  <x:String x:Key="Text.Svn.Authenticate.Password" xml:space="preserve">Password:</x:String>
+  <x:String x:Key="Text.Svn.Authenticate.Required" xml:space="preserve">Authentication required. Please click the [Credentials] button in toolbar and input your SVN account.</x:String>
+  <x:String x:Key="Text.Svn.Authenticate.Success" xml:space="preserve">Credentials have been verified and saved by svn.</x:String>
+  <x:String x:Key="Text.Svn.Authenticate.Tip" xml:space="preserve">Credentials will be verified with the repository and saved into the auth cache of svn.</x:String>
+  <x:String x:Key="Text.Svn.Authenticate.Username" xml:space="preserve">Username:</x:String>
+  <x:String x:Key="Text.Svn.Commit.EmptyMessage" xml:space="preserve">Commit message can NOT be empty!</x:String>
+  <x:String x:Key="Text.Svn.Commit.NothingToCommit" xml:space="preserve">Nothing to commit. Please move the changes into the [CHANGES TO COMMIT] list first.</x:String>
+  <x:String x:Key="Text.Svn.DeleteUnversioned.Total" xml:space="preserve">Total {0} unversioned items</x:String>
+  <x:String x:Key="Text.Svn.DeleteUnversioned.Warning" xml:space="preserve">Selected unversioned files/folders will be deleted from disk permanently!</x:String>
+  <x:String x:Key="Text.Svn.Diff.NoTextChange" xml:space="preserve">NO TEXT CHANGES (FOLDER OR PROPERTIES ONLY)</x:String>
+  <x:String x:Key="Text.Svn.Log" xml:space="preserve">Log</x:String>
+  <x:String x:Key="Text.Svn.Log.CopyMessage" xml:space="preserve">Copy Message</x:String>
+  <x:String x:Key="Text.Svn.Log.CopyRevision" xml:space="preserve">Copy Revision Number</x:String>
+  <x:String x:Key="Text.Svn.Log.CopyUrl" xml:space="preserve">Copy URL</x:String>
+  <x:String x:Key="Text.Svn.Log.Date" xml:space="preserve">DATE</x:String>
+  <x:String x:Key="Text.Svn.Log.Failed" xml:space="preserve">Failed to load SVN log</x:String>
+  <x:String x:Key="Text.Svn.Log.LoadMore" xml:space="preserve">Load More</x:String>
+  <x:String x:Key="Text.Svn.Log.Message" xml:space="preserve">MESSAGE</x:String>
+  <x:String x:Key="Text.Svn.Log.Revision" xml:space="preserve">REVISION</x:String>
+  <x:String x:Key="Text.Svn.Log.SelectRevision" xml:space="preserve">SELECT A REVISION TO VIEW DETAILS</x:String>
+  <x:String x:Key="Text.Svn.NotConfigured" xml:space="preserve">SVN executable is NOT configured. Please set it in [Preferences] > [GIT] > [SVN] first.</x:String>
+  <x:String x:Key="Text.Svn.OpenInFileManager" xml:space="preserve">Open in File Browser</x:String>
+  <x:String x:Key="Text.Svn.OpenInTerminal" xml:space="preserve">Open in Terminal</x:String>
+  <x:String x:Key="Text.Svn.Refresh" xml:space="preserve">Refresh</x:String>
+  <x:String x:Key="Text.Svn.Revert" xml:space="preserve">Revert</x:String>
+  <x:String x:Key="Text.Svn.Revert.Total" xml:space="preserve">Total {0} changes</x:String>
+  <x:String x:Key="Text.Svn.Revert.Warning" xml:space="preserve">Local modifications of the selected items will be lost!</x:String>
+  <x:String x:Key="Text.Svn.Update" xml:space="preserve">Update</x:String>
+  <x:String x:Key="Text.Svn.Update.CtrlClickTip" xml:space="preserve">Hold Ctrl to choose a revision</x:String>
+  <x:String x:Key="Text.Svn.Update.Current" xml:space="preserve">Current:</x:String>
+  <x:String x:Key="Text.Svn.Update.Revision" xml:space="preserve">To Revision:</x:String>
+  <x:String x:Key="Text.Svn.Update.Revision.Placeholder" xml:space="preserve">Leave empty to update to HEAD</x:String>
+  <x:String x:Key="Text.Svn.Update.Url" xml:space="preserve">URL:</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy" xml:space="preserve">Local Changes</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.Add" xml:space="preserve">Add to Version Control</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.Changes" xml:space="preserve">CHANGES</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.CommitTip" xml:space="preserve">Unversioned/missing items will be added/deleted automatically when committing</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.DeleteUnversioned" xml:space="preserve">Delete Unversioned Items...</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.Exclude" xml:space="preserve">Exclude from Commit</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.ExcludeAll" xml:space="preserve">Exclude All</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.Include" xml:space="preserve">Include in Commit</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.IncludeAll" xml:space="preserve">Include All</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.Included" xml:space="preserve">CHANGES TO COMMIT</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.MarkAsDeleted" xml:space="preserve">Mark as Deleted</x:String>
+  <x:String x:Key="Text.Svn.WorkingCopy.Revert" xml:space="preserve">Revert...</x:String>
   <x:String x:Key="Text.Tag.Tagger" xml:space="preserve">TAGGER</x:String>
   <x:String x:Key="Text.Tag.Time" xml:space="preserve">TIME</x:String>
   <x:String x:Key="Text.TagCM.Checkout" xml:space="preserve">Checkout Tag...</x:String>

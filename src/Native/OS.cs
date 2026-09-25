@@ -27,6 +27,7 @@ namespace SourceGit.Native
 
             Directories GetOrCreateDirectories();
             string FindGitExecutable();
+            string FindSvnExecutable();
             string FindTerminal(Models.ShellOrTerminal shell);
             List<Models.ExternalTool> FindExternalTools();
 
@@ -76,6 +77,25 @@ namespace SourceGit.Native
             get;
             private set;
         } = Models.GitFlowVersion.None;
+
+        public static string SvnExecutable
+        {
+            get => _svnExecutable;
+            set
+            {
+                if (_svnExecutable != value)
+                {
+                    _svnExecutable = value;
+                    UpdateSvnVersion();
+                }
+            }
+        }
+
+        public static string SvnVersionString
+        {
+            get;
+            private set;
+        } = string.Empty;
 
         public static string CredentialHelper
         {
@@ -195,6 +215,11 @@ namespace SourceGit.Native
         public static string FindGitExecutable()
         {
             return _backend.FindGitExecutable();
+        }
+
+        public static string FindSvnExecutable()
+        {
+            return _backend.FindSvnExecutable();
         }
 
         public static bool TestShellOrTerminal(Models.ShellOrTerminal shell)
@@ -402,11 +427,42 @@ namespace SourceGit.Native
             }
         }
 
+        private static void UpdateSvnVersion()
+        {
+            SvnVersionString = string.Empty;
+            if (string.IsNullOrEmpty(_svnExecutable) || !File.Exists(_svnExecutable))
+                return;
+
+            var start = new ProcessStartInfo();
+            start.FileName = _svnExecutable;
+            start.Arguments = "--version --quiet";
+            start.UseShellExecute = false;
+            start.CreateNoWindow = true;
+            start.RedirectStandardOutput = true;
+            start.RedirectStandardError = true;
+            start.StandardOutputEncoding = Encoding.UTF8;
+            start.StandardErrorEncoding = Encoding.UTF8;
+
+            try
+            {
+                using var proc = Process.Start(start)!;
+                var rs = proc.StandardOutput.ReadToEnd();
+                proc.WaitForExit();
+                if (proc.ExitCode == 0 && !string.IsNullOrWhiteSpace(rs))
+                    SvnVersionString = rs.Trim();
+            }
+            catch
+            {
+                // Ignore errors
+            }
+        }
+
         [GeneratedRegex(@"^git version[\s\w]*(\d+)\.(\d+)[\.\-](\d+).*$")]
         private static partial Regex REG_GIT_VERSION();
 
         private static IBackend _backend = null;
         private static string _gitExecutable = string.Empty;
+        private static string _svnExecutable = string.Empty;
         private static bool _enableSystemWindowFrame = false;
     }
 }

@@ -23,6 +23,7 @@ namespace SourceGit.ViewModels
                 _instance._isLoading = false;
 
                 _instance.PrepareGit();
+                _instance.PrepareSvn();
                 _instance.PrepareShellOrTerminal();
                 _instance.PrepareExternalDiffMergeTool();
                 _instance.PrepareWorkspaces();
@@ -320,6 +321,19 @@ namespace SourceGit.ViewModels
             }
         }
 
+        public string SvnInstallPath
+        {
+            get => Native.OS.SvnExecutable;
+            set
+            {
+                if (Native.OS.SvnExecutable != value)
+                {
+                    Native.OS.SvnExecutable = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public string GitDefaultCloneDir
         {
             get => _gitDefaultCloneDir;
@@ -482,6 +496,12 @@ namespace SourceGit.ViewModels
         public bool IsGitConfigured()
         {
             var path = GitInstallPath;
+            return !string.IsNullOrEmpty(path) && File.Exists(path);
+        }
+
+        public bool IsSvnConfigured()
+        {
+            var path = SvnInstallPath;
             return !string.IsNullOrEmpty(path) && File.Exists(path);
         }
 
@@ -665,6 +685,13 @@ namespace SourceGit.ViewModels
             var path = Native.OS.GitExecutable;
             if (string.IsNullOrEmpty(path) || !File.Exists(path))
                 GitInstallPath = Native.OS.FindGitExecutable();
+        }
+
+        private void PrepareSvn()
+        {
+            var path = Native.OS.SvnExecutable;
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+                SvnInstallPath = Native.OS.FindSvnExecutable();
         }
 
         private void PrepareShellOrTerminal()

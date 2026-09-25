@@ -33,6 +33,17 @@ namespace SourceGit.Views
             set => SetAndRaise(ShowGitVersionWarningProperty, ref _showGitVersionWarning, value);
         }
 
+        public static readonly DirectProperty<Preferences, string> SvnVersionProperty =
+            AvaloniaProperty.RegisterDirect<Preferences, string>(
+                nameof(SvnVersion),
+                static o => o.SvnVersion);
+
+        public string SvnVersion
+        {
+            get => _svnVersion;
+            set => SetAndRaise(SvnVersionProperty, ref _svnVersion, value);
+        }
+
         public string DefaultUser
         {
             get;
@@ -168,6 +179,7 @@ namespace SourceGit.Views
             }
 
             UpdateGitVersion();
+            UpdateSvnVersion();
             InitializeComponent();
         }
 
@@ -275,6 +287,32 @@ namespace SourceGit.Views
             catch (Exception ex)
             {
                 await new Alert().ShowAsync(this, $"Failed to select git executable: {ex.Message}", true);
+            }
+
+            e.Handled = true;
+        }
+
+        private async void SelectSvnExecutable(object _, RoutedEventArgs e)
+        {
+            var pattern = OperatingSystem.IsWindows() ? "svn.exe" : "svn";
+            var options = new FilePickerOpenOptions()
+            {
+                FileTypeFilter = [new FilePickerFileType("SVN Executable") { Patterns = [pattern] }],
+                AllowMultiple = false,
+            };
+
+            try
+            {
+                var selected = await StorageProvider.OpenFilePickerAsync(options);
+                if (selected is { Count: 1 })
+                {
+                    ViewModels.Preferences.Instance.SvnInstallPath = selected[0].Path.LocalPath;
+                    UpdateSvnVersion();
+                }
+            }
+            catch (Exception ex)
+            {
+                await new Alert().ShowAsync(this, $"Failed to select svn executable: {ex.Message}", true);
             }
 
             e.Handled = true;
@@ -423,6 +461,11 @@ namespace SourceGit.Views
             UpdateGitVersion();
         }
 
+        private void OnSvnInstallPathChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateSvnVersion();
+        }
+
         private void OnAddOpenAIService(object sender, RoutedEventArgs e)
         {
             var service = new AI.Service() { Name = "Unnamed Service" };
@@ -522,7 +565,13 @@ namespace SourceGit.Views
             ShowGitVersionWarning = !string.IsNullOrEmpty(GitVersion) && Native.OS.GitVersion < Models.GitVersions.MINIMAL;
         }
 
+        private void UpdateSvnVersion()
+        {
+            SvnVersion = Native.OS.SvnVersionString;
+        }
+
         private string _gitVersion = string.Empty;
+        private string _svnVersion = string.Empty;
         private bool _showGitVersionWarning = false;
         private Models.GPGFormat _gpgFormat = Models.GPGFormat.Supported[0];
         private string _gpgExecutableFile = string.Empty;

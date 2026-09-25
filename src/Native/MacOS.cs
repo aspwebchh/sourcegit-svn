@@ -86,6 +86,22 @@ namespace SourceGit.Native
             return string.Empty;
         }
 
+        public string FindSvnExecutable()
+        {
+            var svnPathVariants = new List<string>() {
+                "/usr/bin/svn",
+                "/usr/local/bin/svn",
+                "/opt/homebrew/bin/svn",
+                "/opt/local/bin/svn"
+            };
+
+            foreach (var path in svnPathVariants)
+                if (File.Exists(path))
+                    return path;
+
+            return string.Empty;
+        }
+
         public string FindTerminal(Models.ShellOrTerminal shell)
         {
             return shell.Exec;

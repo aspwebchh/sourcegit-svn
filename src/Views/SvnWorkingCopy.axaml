@@ -1,0 +1,262 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SourceGit.ViewModels"
+             xmlns:v="using:SourceGit.Views"
+             xmlns:c="using:SourceGit.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="SourceGit.Views.SvnWorkingCopy"
+             x:DataType="vm:SvnWorkingCopy">
+  <Grid Background="{DynamicResource Brush.SubPanel}">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="{Binding Source={x:Static vm:Preferences.Instance}, Path=Layout.WorkingCopyLeftWidth, Mode=TwoWay}" MinWidth="300"/>
+      <ColumnDefinition Width="4"/>
+      <ColumnDefinition Width="*" MinWidth="470"/>
+    </Grid.ColumnDefinitions>
+
+    <!-- Left -->
+    <Grid Grid.Column="0" Background="{DynamicResource Brush.Window}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="36" MinHeight="36" MaxHeight="36"/>
+        <RowDefinition Height="*" MinHeight="100"/>
+        <RowDefinition Height="1"/>
+        <RowDefinition Height="*" MinHeight="100"/>
+      </Grid.RowDefinitions>
+
+      <!-- Search Filter -->
+      <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Border0}">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBox Grid.Column="0"
+                   Height="24"
+                   Margin="8,0,4,0"
+                   BorderThickness="1"
+                   CornerRadius="12"
+                   Text="{Binding Filter, Mode=TwoWay}"
+                   BorderBrush="{DynamicResource Brush.Border2}"
+                   Watermark="{DynamicResource Text.WorkingCopy.FilterChanges}"
+                   VerticalContentAlignment="Center">
+            <TextBox.InnerLeftContent>
+              <Path Width="14" Height="14"
+                    Margin="6,0,0,0"
+                    Fill="{DynamicResource Brush.FG2}"
+                    Data="{StaticResource Icons.Search}"/>
+            </TextBox.InnerLeftContent>
+
+            <TextBox.InnerRightContent>
+              <Button Classes="icon_button"
+                      Width="16"
+                      Margin="0,0,6,0"
+                      Command="{Binding ClearFilter}"
+                      IsVisible="{Binding Filter, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                      HorizontalAlignment="Right">
+                <Path Width="14" Height="14"
+                      Margin="0,1,0,0"
+                      Fill="{DynamicResource Brush.FG1}"
+                      Data="{StaticResource Icons.Clear}"/>
+              </Button>
+            </TextBox.InnerRightContent>
+          </TextBox>
+
+          <v:ChangeViewModeSwitcher Grid.Column="1"
+                                    Width="26"
+                                    Margin="0,0,4,0"
+                                    VerticalAlignment="Center"
+                                    ViewMode="{Binding Source={x:Static vm:Preferences.Instance}, Path=ChangeViewMode, Mode=TwoWay}"/>
+        </Grid>
+      </Border>
+
+      <!-- Changes -->
+      <Grid Grid.Row="1" RowDefinitions="28,*">
+        <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Border0}">
+          <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+            <Path Grid.Column="0" Margin="8,0,0,0" Width="14" Height="14" Fill="{DynamicResource Brush.FG2}" Data="{StaticResource Icons.Changes}"/>
+            <TextBlock Grid.Column="1" Foreground="{DynamicResource Brush.FG2}" FontWeight="Bold" Margin="4,0,0,0">
+              <Run Text="{DynamicResource Text.Svn.WorkingCopy.Changes}"/>
+              <Run Text="{Binding ChangesCountInfo, Mode=OneWay}"/>
+            </TextBlock>
+            <v:LoadingIcon Grid.Column="2" Width="14" Height="14" Margin="8,0,0,0" IsVisible="{Binding IsBusy}"/>
+
+            <Button Grid.Column="4"
+                    Classes="icon_button"
+                    Width="26" Height="14"
+                    Padding="0"
+                    Click="OnIncludeSelectedButtonClicked">
+              <ToolTip.Tip>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                  <TextBlock Text="{DynamicResource Text.Svn.WorkingCopy.Include}" VerticalAlignment="Center"/>
+                  <TextBlock Margin="16,0,0,0"
+                             Text="{OnPlatform Space/Enter, macOS=␣/Enter}"
+                             Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}"
+                             FontSize="11"
+                             VerticalAlignment="Center"/>
+                </StackPanel>
+              </ToolTip.Tip>
+              <Path Width="14" Height="14" Margin="0,6,0,0" Data="{StaticResource Icons.Down}"/>
+            </Button>
+            <Button Grid.Column="5"
+                    Classes="icon_button"
+                    Width="26" Height="14"
+                    Padding="0"
+                    Margin="0,0,4,0"
+                    ToolTip.Tip="{DynamicResource Text.Svn.WorkingCopy.IncludeAll}"
+                    Command="{Binding IncludeAll}">
+              <Path Width="14" Height="14" Data="{StaticResource Icons.DoubleDown}"/>
+            </Button>
+          </Grid>
+        </Border>
+
+        <v:ChangeCollectionView Grid.Row="1"
+                                x:Name="ChangesView"
+                                IsUnstagedChange="True"
+                                Background="{DynamicResource Brush.Contents}"
+                                ViewMode="{Binding Source={x:Static vm:Preferences.Instance}, Path=ChangeViewMode}"
+                                EnableCompactFolders="{Binding Source={x:Static vm:Preferences.Instance}, Path=EnableCompactFoldersInChangesTree}"
+                                Changes="{Binding VisibleChanges}"
+                                Selection="{Binding SelectedChanges, Mode=TwoWay}"
+                                ContextRequested="OnChangesContextRequested"
+                                ChangeDoubleTapped="OnChangeDoubleTapped"
+                                KeyDown="OnChangesKeyDown"/>
+      </Grid>
+
+      <!-- Splitter -->
+      <GridSplitter Grid.Row="2"
+                    MinHeight="1"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Background="{DynamicResource Brush.Border0}"
+                    Focusable="False"/>
+
+      <!-- Changes to commit -->
+      <Grid Grid.Row="3" RowDefinitions="27,*">
+        <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Border0}">
+          <Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto">
+            <Path Grid.Column="0" Margin="8,0,0,0" Width="14" Height="14" Fill="{DynamicResource Brush.FG2}" Data="{StaticResource Icons.Commit}"/>
+            <TextBlock Grid.Column="1" Foreground="{DynamicResource Brush.FG2}" FontWeight="Bold" Margin="4,0,0,0">
+              <Run Text="{DynamicResource Text.Svn.WorkingCopy.Included}"/>
+              <Run Text="{Binding IncludedCountInfo, Mode=OneWay}"/>
+            </TextBlock>
+
+            <Button Grid.Column="3" Classes="icon_button" Width="26" Height="14" Padding="0" Click="OnExcludeSelectedButtonClicked">
+              <ToolTip.Tip>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                  <TextBlock Text="{DynamicResource Text.Svn.WorkingCopy.Exclude}" VerticalAlignment="Center"/>
+                  <TextBlock Margin="16,0,0,0"
+                             Text="{OnPlatform Space/Enter, macOS=␣/Enter}"
+                             FontSize="11"
+                             VerticalAlignment="Center"
+                             Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}"/>
+                </StackPanel>
+              </ToolTip.Tip>
+              <Path Width="14" Height="14" Margin="0,6,0,0" Data="{StaticResource Icons.Up}"/>
+            </Button>
+            <Button Grid.Column="4"
+                    Classes="icon_button"
+                    Width="26" Height="14"
+                    Padding="0"
+                    Margin="0,0,4,0"
+                    ToolTip.Tip="{DynamicResource Text.Svn.WorkingCopy.ExcludeAll}"
+                    Command="{Binding ExcludeAll}">
+              <Path Width="14" Height="14" Data="{StaticResource Icons.DoubleUp}"/>
+            </Button>
+          </Grid>
+        </Border>
+
+        <v:ChangeCollectionView Grid.Row="1"
+                                x:Name="IncludedView"
+                                IsUnstagedChange="True"
+                                Background="{DynamicResource Brush.Contents}"
+                                ViewMode="{Binding Source={x:Static vm:Preferences.Instance}, Path=ChangeViewMode}"
+                                EnableCompactFolders="{Binding Source={x:Static vm:Preferences.Instance}, Path=EnableCompactFoldersInChangesTree}"
+                                Changes="{Binding VisibleIncluded}"
+                                Selection="{Binding SelectedIncluded, Mode=TwoWay}"
+                                ContextRequested="OnIncludedContextRequested"
+                                ChangeDoubleTapped="OnIncludedDoubleTapped"
+                                KeyDown="OnIncludedKeyDown"/>
+      </Grid>
+    </Grid>
+
+    <GridSplitter Grid.Column="1"
+                  MinWidth="1"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  Background="Transparent"
+                  BorderThickness="1,0,0,0"
+                  BorderBrush="{DynamicResource Brush.Border0}"
+                  Focusable="False"/>
+
+    <!-- Right -->
+    <Grid Grid.Column="2" Margin="4,4,6,0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" MinHeight="100"/>
+        <RowDefinition Height="4"/>
+        <RowDefinition Height="128" MinHeight="100"/>
+        <RowDefinition Height="40"/>
+      </Grid.RowDefinitions>
+
+      <!-- Selected Change Detail -->
+      <Grid Grid.Row="0">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <Path Width="64" Height="64" Data="{StaticResource Icons.Diff}" Fill="{DynamicResource Brush.FG2}"/>
+          <TextBlock Margin="0,16,0,0"
+                     Text="{DynamicResource Text.Diff.Welcome}"
+                     FontSize="18" FontWeight="Bold"
+                     Foreground="{DynamicResource Brush.FG2}"
+                     HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <ContentControl Content="{Binding DetailContext}">
+          <ContentControl.DataTemplates>
+            <DataTemplate DataType="vm:SvnDiffContext">
+              <v:SvnDiffView/>
+            </DataTemplate>
+          </ContentControl.DataTemplates>
+        </ContentControl>
+      </Grid>
+
+      <!-- Splitter -->
+      <GridSplitter Grid.Row="1" MinHeight="1"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Background="Transparent"
+                    Focusable="False"/>
+
+      <!-- Commit Message -->
+      <v:CommitMessageToolBox Grid.Row="2"
+                              ShowAdvancedOptions="False"
+                              CommitMessage="{Binding CommitMessage, Mode=TwoWay}"/>
+
+      <!-- Commit Options -->
+      <Grid Grid.Row="3" VerticalAlignment="Center" ColumnDefinitions="*,Auto,Auto">
+        <TextBlock Grid.Column="0"
+                   Text="{DynamicResource Text.Svn.WorkingCopy.CommitTip}"
+                   Foreground="{DynamicResource Brush.FG2}"
+                   FontSize="11"
+                   VerticalAlignment="Center"
+                   TextTrimming="CharacterEllipsis"/>
+
+        <v:LoadingIcon Grid.Column="1"
+                       Width="18" Height="18"
+                       HorizontalAlignment="Right"
+                       IsVisible="{Binding IsCommitting}"/>
+
+        <Button Grid.Column="2"
+                Classes="flat primary"
+                Content="{DynamicResource Text.WorkingCopy.Commit}"
+                Height="28"
+                Margin="8,0,0,0"
+                Padding="8,0"
+                Click="OnCommit"
+                HotKey="{OnPlatform Ctrl+Enter, macOS=⌘+Enter}"
+                ToolTip.Tip="{OnPlatform Ctrl+Enter, macOS=⌘+Enter}"
+                ToolTip.Placement="Top"
+                ToolTip.VerticalOffset="0">
+          <Button.IsEnabled>
+            <MultiBinding Converter="{x:Static BoolConverters.And}">
+              <Binding Path="IsCommitting" Converter="{x:Static BoolConverters.Not}"/>
+              <Binding Path="CommitMessage" Converter="{x:Static c:StringConverters.IsNotNullOrWhitespace}"/>
+              <Binding Path="HasIncluded"/>
+            </MultiBinding>
+          </Button.IsEnabled>
+        </Button>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

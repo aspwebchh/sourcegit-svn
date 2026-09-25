@@ -1,0 +1,255 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:m="using:SourceGit.Models"
+             xmlns:vm="using:SourceGit.ViewModels"
+             xmlns:v="using:SourceGit.Views"
+             xmlns:c="using:SourceGit.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SourceGit.Views.SvnHistories"
+             x:DataType="vm:SvnHistories">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" MinHeight="100"/>
+      <RowDefinition Height="3"/>
+      <RowDefinition Height="*" MinHeight="100"/>
+    </Grid.RowDefinitions>
+
+    <!-- Revisions -->
+    <Grid Grid.Row="0" RowDefinitions="*,Auto">
+      <DataGrid Grid.Row="0"
+                x:Name="RevisionList"
+                Classes="static_scrollbar"
+                Background="{DynamicResource Brush.Contents}"
+                ItemsSource="{Binding Revisions, Mode=OneWay}"
+                SelectedItem="{Binding SelectedRevision, Mode=TwoWay}"
+                SelectionMode="Single"
+                CanUserReorderColumns="False"
+                CanUserResizeColumns="True"
+                CanUserSortColumns="False"
+                IsReadOnly="True"
+                HeadersVisibility="Column"
+                GridLinesVisibility="None"
+                BorderThickness="0"
+                ColumnHeaderHeight="24"
+                RowHeight="26"
+                ScrollViewer.AllowAutoHide="False"
+                ContextRequested="OnRevisionContextRequested">
+        <DataGrid.Styles>
+          <Style Selector="DataGridColumnHeader">
+            <Setter Property="MinHeight" Value="24"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+              <ControlTemplate>
+                <Border Background="{TemplateBinding Background}" BorderThickness="0" CornerRadius="0">
+                  <Grid ColumnDefinitions="*,4">
+                    <ContentPresenter x:Name="PART_ContentPresenter"
+                                      Grid.Column="0"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"/>
+
+                    <Rectangle Grid.Column="1"
+                               Width="1"
+                               HorizontalAlignment="Center" VerticalAlignment="Stretch"
+                               Fill="{DynamicResource Brush.Border0}"
+                               IsVisible="{TemplateBinding AreSeparatorsVisible}"/>
+                  </Grid>
+                </Border>
+              </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:nth-child(4)">
+              <Setter Property="AreSeparatorsVisible" Value="False"/>
+            </Style>
+          </Style>
+        </DataGrid.Styles>
+
+        <DataGrid.Columns>
+          <DataGridTemplateColumn MinWidth="72" IsReadOnly="True">
+            <DataGridTemplateColumn.Header>
+              <TextBlock Classes="table_header" Text="{DynamicResource Text.Svn.Log.Revision}" HorizontalAlignment="Center"/>
+            </DataGridTemplateColumn.Header>
+
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate DataType="m:SvnRevision">
+                <Border Padding="8,0" Background="Transparent" ClipToBounds="True">
+                  <TextBlock Text="{Binding RevisionName}" FontFamily="{DynamicResource Fonts.Monospace}" VerticalAlignment="Center"/>
+                </Border>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+
+          <DataGridTemplateColumn Width="*" IsReadOnly="True">
+            <DataGridTemplateColumn.Header>
+              <TextBlock Classes="table_header" Text="{DynamicResource Text.Svn.Log.Message}" HorizontalAlignment="Center"/>
+            </DataGridTemplateColumn.Header>
+
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate DataType="m:SvnRevision">
+                <Border Padding="8,0" Background="Transparent" ClipToBounds="True">
+                  <TextBlock Text="{Binding Subject}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                </Border>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+
+          <DataGridTemplateColumn MinWidth="100" IsReadOnly="True">
+            <DataGridTemplateColumn.Header>
+              <TextBlock Classes="table_header" Text="{DynamicResource Text.Histories.Header.Author}" HorizontalAlignment="Center"/>
+            </DataGridTemplateColumn.Header>
+
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate DataType="m:SvnRevision">
+                <Border Padding="8,0" Background="Transparent" ClipToBounds="True">
+                  <TextBlock Text="{Binding Author}" VerticalAlignment="Center"/>
+                </Border>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+
+          <DataGridTemplateColumn MinWidth="160" IsReadOnly="True">
+            <DataGridTemplateColumn.Header>
+              <TextBlock Classes="table_header" Text="{DynamicResource Text.Svn.Log.Date}" HorizontalAlignment="Center"/>
+            </DataGridTemplateColumn.Header>
+
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate DataType="m:SvnRevision">
+                <Border Padding="8,0" Background="Transparent" ClipToBounds="True">
+                  <TextBlock Text="{Binding DateStr}" FontFeatures="+tnum" VerticalAlignment="Center"/>
+                </Border>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+        </DataGrid.Columns>
+      </DataGrid>
+
+      <!-- Loading / Error -->
+      <v:LoadingIcon Grid.Row="0"
+                     Width="48" Height="48"
+                     HorizontalAlignment="Center" VerticalAlignment="Center"
+                     IsVisible="{Binding IsLoading}"/>
+
+      <Border Grid.Row="0"
+              Margin="16" Padding="12,8"
+              HorizontalAlignment="Center" VerticalAlignment="Center"
+              CornerRadius="4"
+              Background="{DynamicResource Brush.Popup}"
+              BorderThickness="1" BorderBrush="{DynamicResource Brush.Border2}"
+              IsVisible="{Binding LoadError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+        <StackPanel Orientation="Vertical">
+          <StackPanel Orientation="Horizontal">
+            <Path Width="14" Height="14" Data="{StaticResource Icons.Error}" Fill="Red"/>
+            <TextBlock Margin="8,0,0,0" Classes="bold" Text="{DynamicResource Text.Svn.Log.Failed}"/>
+          </StackPanel>
+          <SelectableTextBlock Margin="0,8,0,0" MaxWidth="600" Text="{Binding LoadError}" TextWrapping="Wrap" Foreground="{DynamicResource Brush.FG2}"/>
+        </StackPanel>
+      </Border>
+
+      <Button Grid.Row="1"
+              Classes="flat"
+              Height="24"
+              Margin="0,4"
+              Padding="16,0"
+              HorizontalAlignment="Center"
+              Content="{DynamicResource Text.Svn.Log.LoadMore}"
+              Command="{Binding LoadMore}">
+        <Button.IsVisible>
+          <MultiBinding Converter="{x:Static BoolConverters.And}">
+            <Binding Path="HasMore"/>
+            <Binding Path="IsLoading" Converter="{x:Static BoolConverters.Not}"/>
+          </MultiBinding>
+        </Button.IsVisible>
+      </Button>
+    </Grid>
+
+    <GridSplitter Grid.Row="1"
+                  MinHeight="1"
+                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                  Background="{DynamicResource Brush.Border0}"
+                  Focusable="False"/>
+
+    <!-- Selected Revision -->
+    <Grid Grid.Row="2" Background="{DynamicResource Brush.Window}">
+      <StackPanel Orientation="Vertical"
+                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                  IsVisible="{Binding SelectedRevision, Converter={x:Static ObjectConverters.IsNull}}">
+        <Path Width="64" Height="64" Data="{StaticResource Icons.Detail}" Fill="{DynamicResource Brush.FG2}"/>
+        <TextBlock Margin="0,16,0,0"
+                   Text="{DynamicResource Text.Svn.Log.SelectRevision}"
+                   FontSize="18" FontWeight="Bold"
+                   Foreground="{DynamicResource Brush.FG2}"
+                   HorizontalAlignment="Center"/>
+      </StackPanel>
+
+      <Grid IsVisible="{Binding SelectedRevision, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="300" MinWidth="200"/>
+          <ColumnDefinition Width="4"/>
+          <ColumnDefinition Width="*" MinWidth="300"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Revision info & changed files -->
+        <Grid Grid.Column="0" RowDefinitions="Auto,*">
+          <Border Grid.Row="0"
+                  Padding="8"
+                  BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Border0}">
+            <StackPanel Orientation="Vertical">
+              <StackPanel Orientation="Horizontal">
+                <Border Height="18" Padding="6,0" CornerRadius="9" Background="{DynamicResource Brush.Accent}">
+                  <TextBlock Text="{Binding SelectedRevision.RevisionName, FallbackValue=''}"
+                             FontFamily="{DynamicResource Fonts.Monospace}"
+                             FontSize="11"
+                             Foreground="White"
+                             VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock Margin="8,0,0,0" Classes="bold" VerticalAlignment="Center" Text="{Binding SelectedRevision.Author, FallbackValue=''}"/>
+                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" Foreground="{DynamicResource Brush.FG2}" Text="{Binding SelectedRevision.DateStr, FallbackValue=''}"/>
+              </StackPanel>
+
+              <ScrollViewer Margin="0,8,0,0" MaxHeight="120" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <SelectableTextBlock Text="{Binding SelectedRevision.Message, FallbackValue=''}" TextWrapping="Wrap"/>
+              </ScrollViewer>
+            </StackPanel>
+          </Border>
+
+          <v:ChangeCollectionView Grid.Row="1"
+                                  IsUnstagedChange="False"
+                                  Background="{DynamicResource Brush.Contents}"
+                                  ViewMode="{Binding Source={x:Static vm:Preferences.Instance}, Path=ChangeViewMode}"
+                                  EnableCompactFolders="{Binding Source={x:Static vm:Preferences.Instance}, Path=EnableCompactFoldersInChangesTree}"
+                                  Changes="{Binding Changes}"
+                                  Selection="{Binding SelectedChanges, Mode=TwoWay}"
+                                  ContextRequested="OnChangeContextRequested"/>
+        </Grid>
+
+        <GridSplitter Grid.Column="1"
+                      MinWidth="1"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      Background="Transparent"
+                      BorderThickness="1,0,0,0"
+                      BorderBrush="{DynamicResource Brush.Border0}"
+                      Focusable="False"/>
+
+        <Grid Grid.Column="2" Margin="4">
+          <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Path Width="64" Height="64" Data="{StaticResource Icons.Diff}" Fill="{DynamicResource Brush.FG2}"/>
+            <TextBlock Margin="0,16,0,0"
+                       Text="{DynamicResource Text.Diff.Welcome}"
+                       FontSize="18" FontWeight="Bold"
+                       Foreground="{DynamicResource Brush.FG2}"
+                       HorizontalAlignment="Center"/>
+          </StackPanel>
+
+          <ContentControl Content="{Binding DiffContext}">
+            <ContentControl.DataTemplates>
+              <DataTemplate DataType="vm:SvnDiffContext">
+                <v:SvnDiffView/>
+              </DataTemplate>
+            </ContentControl.DataTemplates>
+          </ContentControl>
+        </Grid>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

@@ -86,6 +86,10 @@ namespace SourceGit.ViewModels
                 {
                     repoRoot = test.StdOut.Trim();
                 }
+                else if (await Commands.SvnQueryInfo.FindWorkingCopyFolderAsync(_repoPath) is { Length: > 0 } svnFolder)
+                {
+                    repoRoot = svnFolder;
+                }
                 else
                 {
                     var launcher = App.GetLauncher();

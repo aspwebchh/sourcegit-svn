@@ -23,6 +23,10 @@
           <DataTemplate DataType="vm:Repository">
             <v:RepositoryToolbar/>
           </DataTemplate>
+
+          <DataTemplate DataType="vm:SvnRepository">
+            <v:SvnRepositoryToolbar/>
+          </DataTemplate>
         </ContentControl.DataTemplates>
       </ContentControl>
     </Border>
@@ -43,7 +47,7 @@
             <v:Repository>
               <v:Repository.IsCommitSearchPanelVisible>
                 <MultiBinding Converter="{x:Static BoolConverters.And}">
-                  <Binding Path="SelectedViewIndex" Converter="{x:Static c:IntConverters.IsZero}"/>
+                  <Binding Path="IsDashboardVisible"/>
                   <Binding Path="Histories.IsSearchingCommits"/>
                 </MultiBinding>
               </v:Repository.IsCommitSearchPanelVisible>
@@ -51,16 +55,20 @@
               <v:Repository.IsNormalSidebarVisible>
                 <MultiBinding Converter="{x:Static BoolConverters.Or}">
                   <MultiBinding Converter="{x:Static BoolConverters.And}">
-                    <Binding Path="SelectedViewIndex" Converter="{x:Static c:IntConverters.IsZero}"/>
+                    <Binding Path="IsDashboardVisible"/>
                     <Binding Path="Histories.IsSearchingCommits" Converter="{x:Static BoolConverters.Not}"/>
                   </MultiBinding>
                   <MultiBinding Converter="{x:Static BoolConverters.And}">
-                    <Binding Path="SelectedViewIndex" Converter="{x:Static c:IntConverters.IsOne}"/>
+                    <Binding Path="IsWorkingCopyVisible"/>
                     <Binding Source="{x:Static vm:Preferences.Instance}" Path="Layout.IsSidebarCollapsedInLocalChanges" Converter="{x:Static BoolConverters.Not}"/>
                   </MultiBinding>
                 </MultiBinding>
               </v:Repository.IsNormalSidebarVisible>
             </v:Repository>
+          </DataTemplate>
+
+          <DataTemplate DataType="vm:SvnRepository">
+            <v:SvnRepository/>
           </DataTemplate>
         </ContentControl.DataTemplates>
       </ContentControl>

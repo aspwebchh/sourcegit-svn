@@ -132,6 +132,21 @@
                     </StackPanel>
                   </DataTemplate>
 
+                  <DataTemplate DataType="vm:SvnRepository">
+                    <Border Margin="6,0,0,0"
+                            Height="18"
+                            CornerRadius="9"
+                            Padding="6,0"
+                            Background="{DynamicResource Brush.FG1}"
+                            VerticalAlignment="Center"
+                            IsVisible="{Binding WorkingCopy.Count, Converter={x:Static c:IntConverters.IsGreaterThanZero}}">
+                      <TextBlock Text="{Binding WorkingCopy.Count}"
+                                 FontFamily="{DynamicResource Fonts.Monospace}"
+                                 FontSize="11"
+                                 Foreground="{DynamicResource Brush.Window}"/>
+                    </Border>
+                  </DataTemplate>
+
                   <DataTemplate DataType="vm:Welcome">
                     <Border/>
                   </DataTemplate>

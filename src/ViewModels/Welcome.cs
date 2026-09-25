@@ -123,7 +123,7 @@ namespace SourceGit.ViewModels
 
             var rs = await new Commands.QueryRepositoryRootPath(root).GetResultAsync();
             if (!rs.IsSuccess || string.IsNullOrWhiteSpace(rs.StdOut))
-                return null;
+                return await Commands.SvnQueryInfo.FindWorkingCopyFolderAsync(root);
 
             return rs.StdOut.Trim();
         }
