@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 
 namespace SourceGit.ViewModels
 {
@@ -31,15 +32,13 @@ namespace SourceGit.ViewModels
             _repo = repo;
         }
 
-        public override async Task<bool> Sure()
+        public override Task<bool> Sure()
         {
             var revision = long.TryParse(_revision?.Trim(), out var rev) ? rev : 0;
-            ProgressDescription = revision > 0 ? $"Update working copy to r{revision} ..." : "Update working copy to HEAD ...";
 
-            var log = _repo.CreateLog("Update");
-            Use(log);
-
-            return await _repo.ExecUpdateAsync(revision, log);
+            // Close this popup first, then run the update in the progress dialog.
+            Dispatcher.UIThread.Post(async () => await _repo.ShowUpdateProgressAsync(revision));
+            return Task.FromResult(true);
         }
 
         private readonly SvnRepository _repo;

@@ -225,7 +225,7 @@ namespace SourceGit.ViewModels
         }
 
         /// <summary>
-        ///     Updates the working copy to HEAD in background (without popup), or shows a popup to choose the target revision.
+        ///     Updates the working copy to HEAD with a progress dialog, or shows a popup to choose the target revision.
         /// </summary>
         public async Task UpdateAsync(bool chooseRevision)
         {
@@ -236,23 +236,31 @@ namespace SourceGit.ViewModels
                 return;
             }
 
+            await ShowUpdateProgressAsync(0);
+        }
+
+        /// <summary>
+        ///     Shows a dialog that runs `svn update` (revision 0 means HEAD) and lists the updated items.
+        /// </summary>
+        public async Task ShowUpdateProgressAsync(long revision)
+        {
             if (_isUpdating)
                 return;
 
             IsUpdating = true;
-            await ExecUpdateAsync(0, CreateLog("Update"));
+            await App.ShowDialogAsync(new SvnUpdateProgress(this, revision));
             IsUpdating = false;
         }
 
         /// <summary>
-        ///     Runs `svn update` (revision 0 means HEAD) and refreshes the page. Errors are sent as notifications, and
-        ///     the authentication popup is shown if credentials are required.
+        ///     Runs the given `svn update` command and refreshes the page. The authentication popup is shown if
+        ///     credentials are required.
         /// </summary>
-        public async Task<bool> ExecUpdateAsync(long revision, CommandLog log)
+        public async Task<bool> ExecUpdateAsync(Commands.SvnUpdate cmd, CommandLog log)
         {
             using var lockWatcher = LockWatcher();
 
-            var cmd = new Commands.SvnUpdate(FullPath, revision) { Log = log };
+            cmd.Log = log;
             var succ = await cmd.ExecAsync();
             log.Complete();
 
@@ -260,10 +268,7 @@ namespace SourceGit.ViewModels
             RefreshLog();
 
             if (!succ && cmd.IsAuthenticationFailed)
-            {
                 RequestAuthentication();
-                return true;
-            }
 
             return succ;
         }

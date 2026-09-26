@@ -1008,6 +1008,7 @@
   <x:String x:Key="Text.Svn.Log.Failed" xml:space="preserve">加载 SVN 日志失败</x:String>
   <x:String x:Key="Text.Svn.Log.LoadMore" xml:space="preserve">加载更多</x:String>
   <x:String x:Key="Text.Svn.Log.Message" xml:space="preserve">提交信息</x:String>
+  <x:String x:Key="Text.Svn.Log.RevertToRevision" xml:space="preserve">恢复到此版本...</x:String>
   <x:String x:Key="Text.Svn.Log.Revision" xml:space="preserve">版本</x:String>
   <x:String x:Key="Text.Svn.Log.SelectRevision" xml:space="preserve">选择一个版本查看详情</x:String>
   <x:String x:Key="Text.Svn.NotConfigured" xml:space="preserve">未配置 SVN 可执行文件，请先在【偏好设置】>【GIT】>【SVN】中设置。</x:String>
@@ -1016,12 +1017,35 @@
   <x:String x:Key="Text.Svn.Revert" xml:space="preserve">还原</x:String>
   <x:String x:Key="Text.Svn.Revert.Total" xml:space="preserve">共计 {0} 项修改</x:String>
   <x:String x:Key="Text.Svn.Revert.Warning" xml:space="preserve">选中项的本地修改将会丢失！</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision" xml:space="preserve">恢复到指定版本</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision.LocalChangesWarning" xml:space="preserve">工作副本中已有本地修改，将与恢复结果混在一起，建议先提交或还原。</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision.Success" xml:space="preserve">已恢复到版本 {0}，请在【本地修改】中检查后提交。</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision.Target" xml:space="preserve">恢复到 ：</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision.Tip" xml:space="preserve">将撤销该版本之后的所有修改（反向合并），结果作为本地修改保留，提交后才会生效。</x:String>
   <x:String x:Key="Text.Svn.Update" xml:space="preserve">更新 (Update)</x:String>
   <x:String x:Key="Text.Svn.Update.CtrlClickTip" xml:space="preserve">按住Ctrl键点击可指定更新到的版本</x:String>
   <x:String x:Key="Text.Svn.Update.Current" xml:space="preserve">当前版本 ：</x:String>
   <x:String x:Key="Text.Svn.Update.Revision" xml:space="preserve">目标版本 ：</x:String>
   <x:String x:Key="Text.Svn.Update.Revision.Placeholder" xml:space="preserve">留空表示更新到最新版本 (HEAD)</x:String>
   <x:String x:Key="Text.Svn.Update.Url" xml:space="preserve">URL ：</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Added" xml:space="preserve">新增</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Conflicted" xml:space="preserve">冲突</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Deleted" xml:space="preserve">删除</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Existed" xml:space="preserve">已存在</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Merged" xml:space="preserve">合并</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Replaced" xml:space="preserve">替换</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Restored" xml:space="preserve">恢复</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Skipped" xml:space="preserve">跳过</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Updated" xml:space="preserve">更新</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Canceled" xml:space="preserve">已取消。工作副本可能被锁定，如有需要请执行 svn cleanup。</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Canceling" xml:space="preserve">正在取消...</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Conflicts" xml:space="preserve">存在冲突，请解决后再提交。</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Failed" xml:space="preserve">更新失败！</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Running" xml:space="preserve">正在更新...</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Succeeded" xml:space="preserve">已更新到版本 {0}。</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Summary" xml:space="preserve">新增 {0}   删除 {1}   更新 {2}   冲突 {3}</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Title" xml:space="preserve">SVN 更新</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.UpToDate" xml:space="preserve">已是最新版本 {0}。</x:String>
   <x:String x:Key="Text.Svn.WorkingCopy" xml:space="preserve">本地修改</x:String>
   <x:String x:Key="Text.Svn.WorkingCopy.Add" xml:space="preserve">添加到版本控制</x:String>
   <x:String x:Key="Text.Svn.WorkingCopy.Changes" xml:space="preserve">本地修改</x:String>

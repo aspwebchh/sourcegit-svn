@@ -100,6 +100,16 @@ namespace SourceGit
             return Models.ConfirmEmptyCommitResult.Cancel;
         }
 
+        public static async Task ShowDialogAsync(object data)
+        {
+            if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: { } owner } &&
+                Views.ControlExtensions.CreateFromViewModels(data) is Views.ChromelessWindow dialog)
+            {
+                dialog.DataContext = data;
+                await dialog.ShowDialog(owner);
+            }
+        }
+
         public static void SetLocale(string localeKey)
         {
             var locale = Models.Locale.Supported.Find(x => x.Key.Equals(localeKey, StringComparison.OrdinalIgnoreCase));

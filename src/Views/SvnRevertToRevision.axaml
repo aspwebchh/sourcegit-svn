@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SourceGit.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+             x:Class="SourceGit.Views.SvnRevertToRevision"
+             x:DataType="vm:SvnRevertToRevision">
+  <StackPanel Orientation="Vertical" Margin="8,0,0,0">
+    <StackPanel Orientation="Horizontal">
+      <Path Width="16" Height="16" Data="{StaticResource Icons.Undo}"/>
+      <TextBlock FontSize="18"
+                 Margin="8,0,0,0"
+                 Classes="bold"
+                 Text="{DynamicResource Text.Svn.RevertToRevision}"/>
+    </StackPanel>
+
+    <Grid Margin="0,16,8,8" RowDefinitions="32,32,Auto,Auto" ColumnDefinitions="120,*">
+      <TextBlock Grid.Row="0" Grid.Column="0"
+                 HorizontalAlignment="Right" VerticalAlignment="Center"
+                 Margin="0,0,8,0"
+                 Text="{DynamicResource Text.Svn.Update.Current}"/>
+      <TextBlock Grid.Row="0" Grid.Column="1"
+                 VerticalAlignment="Center"
+                 FontFamily="{DynamicResource Fonts.Monospace}"
+                 Text="{Binding CurrentRevision}"/>
+
+      <TextBlock Grid.Row="1" Grid.Column="0"
+                 HorizontalAlignment="Right" VerticalAlignment="Center"
+                 Margin="0,0,8,0"
+                 Text="{DynamicResource Text.Svn.RevertToRevision.Target}"/>
+      <Grid Grid.Row="1" Grid.Column="1" ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+        <TextBlock Grid.Column="0"
+                   FontFamily="{DynamicResource Fonts.Monospace}"
+                   Text="{Binding Revision.RevisionName}"/>
+        <TextBlock Grid.Column="1"
+                   Margin="8,0,0,0"
+                   Text="{Binding Revision.Subject}"
+                   TextTrimming="CharacterEllipsis"
+                   ToolTip.Tip="{Binding Revision.Message}"/>
+      </Grid>
+
+      <Grid Grid.Row="2" Grid.Column="1" ColumnDefinitions="Auto,*" Margin="0,6,0,0">
+        <Path Grid.Column="0"
+              Width="14" Height="14"
+              VerticalAlignment="Top"
+              Margin="0,2,0,0"
+              Data="{StaticResource Icons.Error}"
+              Fill="DarkOrange"/>
+        <TextBlock Grid.Column="1" Margin="8,0,0,0"
+                   Text="{DynamicResource Text.Svn.RevertToRevision.Tip}"
+                   TextWrapping="Wrap"
+                   Foreground="DarkOrange"/>
+      </Grid>
+
+      <Grid Grid.Row="3" Grid.Column="1" ColumnDefinitions="Auto,*" Margin="0,6,0,0" IsVisible="{Binding HasLocalChanges}">
+        <Path Grid.Column="0"
+              Width="14" Height="14"
+              VerticalAlignment="Top"
+              Margin="0,2,0,0"
+              Data="{StaticResource Icons.Error}"
+              Fill="DarkOrange"/>
+        <TextBlock Grid.Column="1" Margin="8,0,0,0"
+                   Text="{DynamicResource Text.Svn.RevertToRevision.LocalChangesWarning}"
+                   TextWrapping="Wrap"
+                   Foreground="DarkOrange"/>
+      </Grid>
+    </Grid>
+  </StackPanel>
+</UserControl>

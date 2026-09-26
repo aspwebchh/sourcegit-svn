@@ -1004,6 +1004,7 @@
   <x:String x:Key="Text.Svn.Log.Failed" xml:space="preserve">Failed to load SVN log</x:String>
   <x:String x:Key="Text.Svn.Log.LoadMore" xml:space="preserve">Load More</x:String>
   <x:String x:Key="Text.Svn.Log.Message" xml:space="preserve">MESSAGE</x:String>
+  <x:String x:Key="Text.Svn.Log.RevertToRevision" xml:space="preserve">Revert to This Revision...</x:String>
   <x:String x:Key="Text.Svn.Log.Revision" xml:space="preserve">REVISION</x:String>
   <x:String x:Key="Text.Svn.Log.SelectRevision" xml:space="preserve">SELECT A REVISION TO VIEW DETAILS</x:String>
   <x:String x:Key="Text.Svn.NotConfigured" xml:space="preserve">SVN executable is NOT configured. Please set it in [Preferences] > [GIT] > [SVN] first.</x:String>
@@ -1012,12 +1013,35 @@
   <x:String x:Key="Text.Svn.Revert" xml:space="preserve">Revert</x:String>
   <x:String x:Key="Text.Svn.Revert.Total" xml:space="preserve">Total {0} changes</x:String>
   <x:String x:Key="Text.Svn.Revert.Warning" xml:space="preserve">Local modifications of the selected items will be lost!</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision" xml:space="preserve">Revert to Revision</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision.LocalChangesWarning" xml:space="preserve">The working copy has local modifications. They will be mixed with the result, consider committing or reverting them first.</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision.Success" xml:space="preserve">Reverted to {0}. Please review the local changes and commit them.</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision.Target" xml:space="preserve">Revert To:</x:String>
+  <x:String x:Key="Text.Svn.RevertToRevision.Tip" xml:space="preserve">All changes after this revision will be undone by a reverse merge. The result is kept as local modifications until you commit it.</x:String>
   <x:String x:Key="Text.Svn.Update" xml:space="preserve">Update</x:String>
   <x:String x:Key="Text.Svn.Update.CtrlClickTip" xml:space="preserve">Hold Ctrl to choose a revision</x:String>
   <x:String x:Key="Text.Svn.Update.Current" xml:space="preserve">Current:</x:String>
   <x:String x:Key="Text.Svn.Update.Revision" xml:space="preserve">To Revision:</x:String>
   <x:String x:Key="Text.Svn.Update.Revision.Placeholder" xml:space="preserve">Leave empty to update to HEAD</x:String>
   <x:String x:Key="Text.Svn.Update.Url" xml:space="preserve">URL:</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Added" xml:space="preserve">Added</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Conflicted" xml:space="preserve">Conflicted</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Deleted" xml:space="preserve">Deleted</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Existed" xml:space="preserve">Existed</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Merged" xml:space="preserve">Merged</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Replaced" xml:space="preserve">Replaced</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Restored" xml:space="preserve">Restored</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Skipped" xml:space="preserve">Skipped</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Action.Updated" xml:space="preserve">Updated</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Canceled" xml:space="preserve">Canceled. The working copy may be locked, please run 'svn cleanup' if needed.</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Canceling" xml:space="preserve">Canceling...</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Conflicts" xml:space="preserve">Conflicts occurred, please resolve them before committing.</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Failed" xml:space="preserve">Update failed!</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Running" xml:space="preserve">Updating...</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Succeeded" xml:space="preserve">Updated to revision {0}.</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Summary" xml:space="preserve">Added: {0}   Deleted: {1}   Updated: {2}   Conflicted: {3}</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Title" xml:space="preserve">SVN Update</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.UpToDate" xml:space="preserve">Already up to date at revision {0}.</x:String>
   <x:String x:Key="Text.Svn.WorkingCopy" xml:space="preserve">Local Changes</x:String>
   <x:String x:Key="Text.Svn.WorkingCopy.Add" xml:space="preserve">Add to Version Control</x:String>
   <x:String x:Key="Text.Svn.WorkingCopy.Changes" xml:space="preserve">CHANGES</x:String>

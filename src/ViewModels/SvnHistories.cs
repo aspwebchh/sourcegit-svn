@@ -151,6 +151,12 @@ namespace SourceGit.ViewModels
             return string.IsNullOrEmpty(repoPath) ? root : $"{root}/{repoPath}";
         }
 
+        public void RevertToRevision(Models.SvnRevision revision)
+        {
+            if (_repo.CanCreatePopup())
+                _repo.ShowPopup(new SvnRevertToRevision(_repo, revision));
+        }
+
         public async Task OpenRevisionFileAsync(Models.SvnRevisionChange change, Models.ExternalTool tool)
         {
             var root = _repo.Info?.RepositoryRoot;

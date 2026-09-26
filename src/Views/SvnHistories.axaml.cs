@@ -17,8 +17,19 @@ namespace SourceGit.Views
         {
             e.Handled = true;
 
-            if (DataContext is not ViewModels.SvnHistories { SelectedRevision: { } revision })
+            if (DataContext is not ViewModels.SvnHistories { SelectedRevision: { } revision } vm)
                 return;
+
+            var revertTo = new MenuItem();
+            revertTo.Header = App.Text("Svn.Log.RevertToRevision");
+            revertTo.Icon = this.CreateMenuIcon("Icons.Undo");
+            // Nothing to undo if the revision is not older than the working copy.
+            revertTo.IsEnabled = vm.Repository.Info is { } info && revision.Revision < info.Revision;
+            revertTo.Click += (_, ev) =>
+            {
+                vm.RevertToRevision(revision);
+                ev.Handled = true;
+            };
 
             var copyRevision = new MenuItem();
             copyRevision.Header = App.Text("Svn.Log.CopyRevision");
@@ -39,6 +50,8 @@ namespace SourceGit.Views
             };
 
             var menu = new ContextMenu();
+            menu.Items.Add(revertTo);
+            menu.Items.Add(new MenuItem() { Header = "-" });
             menu.Items.Add(copyRevision);
             menu.Items.Add(copyMessage);
             menu.Open(sender as Control);
