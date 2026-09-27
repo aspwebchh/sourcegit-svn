@@ -277,6 +277,22 @@ dotnet build
 dotnet run --project src/SourceGit.csproj
 ```
 
+### Local Windows build and deployment
+
+From the repository root, run these PowerShell scripts in order:
+
+```powershell
+.\build.ps1
+.\publish.ps1
+```
+
+`build.ps1` publishes a self-contained Release executable to `build\SourceGit\win-x64`.
+The output also contains native DLLs required by the executable, so deploy the
+whole folder. `publish.ps1` copies those files to `G:\SourceGit`, preserving
+other files already there (including `data` and `Update-SourceGit.ps1`). Close
+SourceGit if it is running from that folder before publishing. Both scripts
+accept `-Runtime win-arm64`; the publish script also accepts `-Destination`.
+
 Thanks to all the people who contribute.
 
 [![Contributors](https://contrib.rocks/image?repo=sourcegit-scm/sourcegit&columns=20)](https://github.com/sourcegit-scm/sourcegit/graphs/contributors)

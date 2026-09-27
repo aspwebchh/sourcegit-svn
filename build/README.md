@@ -1,7 +1,9 @@
 # build
 
 > [!WARNING]
-> The files under the `build` folder is used for `Github Action` only, **NOT** for end users.
+> The packaging scripts under `build/scripts` are for GitHub Actions. For a
+> local Windows build and deployment, use `build.ps1` and `publish.ps1` from the
+> repository root.
 
 ## How to build this project manually
 
