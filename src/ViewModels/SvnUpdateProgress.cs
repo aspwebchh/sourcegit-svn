@@ -16,11 +16,6 @@ namespace SourceGit.ViewModels
             get => Uri.UnescapeDataString(_repo.Info?.Url ?? string.Empty);
         }
 
-        public string TargetRevisionName
-        {
-            get => _revision > 0 ? $"r{_revision}" : "HEAD";
-        }
-
         public ObservableCollection<Models.SvnUpdateEntry> Entries
         {
             get;
@@ -104,7 +99,7 @@ namespace SourceGit.ViewModels
             }
             else if (succ)
             {
-                var revision = _finalRevision >= 0 ? $"r{_finalRevision}" : TargetRevisionName;
+                var revision = _finalRevision >= 0 ? $"r{_finalRevision}" : _revision > 0 ? $"r{_revision}" : "HEAD";
                 IsSucceeded = true;
                 StatusMessage = App.Text(_fileCount > 0 ? "Svn.UpdateProgress.Succeeded" : "Svn.UpdateProgress.UpToDate", revision);
             }

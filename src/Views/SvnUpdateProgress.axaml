@@ -54,30 +54,16 @@
             Background="{DynamicResource Brush.SubPanel}"
             BorderThickness="1" BorderBrush="{DynamicResource Brush.Border2}"
             CornerRadius="6">
-      <Grid RowDefinitions="26,26" ColumnDefinitions="Auto,*">
-        <TextBlock Grid.Row="0" Grid.Column="0"
+      <Grid ColumnDefinitions="Auto,*" Height="26">
+        <TextBlock Grid.Column="0"
                    Margin="0,0,12,0"
                    Foreground="{DynamicResource Brush.FG2}"
                    Text="{DynamicResource Text.Svn.Update.Url}"/>
-        <TextBlock Grid.Row="0" Grid.Column="1"
+        <TextBlock Grid.Column="1"
                    HorizontalAlignment="Stretch"
                    Text="{Binding Url}"
                    TextTrimming="CharacterEllipsis"
                    ToolTip.Tip="{Binding Url}"/>
-
-        <TextBlock Grid.Row="1" Grid.Column="0"
-                   Margin="0,0,12,0"
-                   Foreground="{DynamicResource Brush.FG2}"
-                   Text="{DynamicResource Text.Svn.Update.Revision}"/>
-        <Border Grid.Row="1" Grid.Column="1"
-                Padding="8,2"
-                HorizontalAlignment="Left" VerticalAlignment="Center"
-                CornerRadius="4"
-                Background="{DynamicResource Brush.Badge}">
-          <TextBlock FontFamily="{DynamicResource Fonts.Monospace}"
-                     Foreground="{DynamicResource Brush.BadgeFG}"
-                     Text="{Binding TargetRevisionName}"/>
-        </Border>
       </Grid>
     </Border>
 
