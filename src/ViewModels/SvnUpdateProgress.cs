@@ -32,6 +32,24 @@ namespace SourceGit.ViewModels
             private set => SetProperty(ref _isRunning, value);
         }
 
+        public bool IsCanceling
+        {
+            get => _isCanceling;
+            private set => SetProperty(ref _isCanceling, value);
+        }
+
+        public bool IsCanceled
+        {
+            get => _isCanceled;
+            private set => SetProperty(ref _isCanceled, value);
+        }
+
+        public bool IsSucceeded
+        {
+            get => _isSucceeded;
+            private set => SetProperty(ref _isSucceeded, value);
+        }
+
         public bool IsFailed
         {
             get => _isFailed;
@@ -81,12 +99,13 @@ namespace SourceGit.ViewModels
             var succ = await _repo.ExecUpdateAsync(cmd, log);
             if (_cancellation.IsCancellationRequested)
             {
-                IsFailed = true;
+                IsCanceled = true;
                 StatusMessage = App.Text("Svn.UpdateProgress.Canceled");
             }
             else if (succ)
             {
                 var revision = _finalRevision >= 0 ? $"r{_finalRevision}" : TargetRevisionName;
+                IsSucceeded = true;
                 StatusMessage = App.Text(_fileCount > 0 ? "Svn.UpdateProgress.Succeeded" : "Svn.UpdateProgress.UpToDate", revision);
             }
             else
@@ -102,6 +121,7 @@ namespace SourceGit.ViewModels
             }
 
             IsRunning = false;
+            IsCanceling = false;
         }
 
         public void Cancel()
@@ -109,6 +129,7 @@ namespace SourceGit.ViewModels
             if (_isRunning && !_cancellation.IsCancellationRequested)
             {
                 _cancellation.Cancel();
+                IsCanceling = true;
                 StatusMessage = App.Text("Svn.UpdateProgress.Canceling");
             }
         }
@@ -160,6 +181,9 @@ namespace SourceGit.ViewModels
         private readonly CancellationTokenSource _cancellation = new CancellationTokenSource();
         private bool _isStarted = false;
         private bool _isRunning = false;
+        private bool _isCanceling = false;
+        private bool _isCanceled = false;
+        private bool _isSucceeded = false;
         private bool _isFailed = false;
         private bool _hasErrorEntry = false;
         private string _statusMessage = string.Empty;

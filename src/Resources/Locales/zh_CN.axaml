@@ -1037,6 +1037,7 @@
   <x:String x:Key="Text.Svn.UpdateProgress.Action.Restored" xml:space="preserve">恢复</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Action.Skipped" xml:space="preserve">跳过</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Action.Updated" xml:space="preserve">更新</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Activity" xml:space="preserve">更新记录</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Canceled" xml:space="preserve">已取消。工作副本可能被锁定，如有需要请执行 svn cleanup。</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Canceling" xml:space="preserve">正在取消...</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Conflicts" xml:space="preserve">存在冲突，请解决后再提交。</x:String>

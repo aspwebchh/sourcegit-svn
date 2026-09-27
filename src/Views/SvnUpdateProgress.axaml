@@ -13,7 +13,7 @@
                     Icon="/App.ico"
                     Title="{DynamicResource Text.Svn.UpdateProgress.Title}"
                     Width="800" Height="500"
-                    MinWidth="480" MinHeight="300"
+                    MinWidth="480" MinHeight="360"
                     CanResize="True"
                     WindowStartupLocation="CenterOwner">
   <v:ChromelessWindow.Styles>
@@ -49,141 +49,190 @@
     </Grid>
 
     <!-- Target -->
-    <Grid Grid.Row="1" Margin="12,8,12,0" RowDefinitions="24,24" ColumnDefinitions="Auto,*">
-      <TextBlock Grid.Row="0" Grid.Column="0"
-                 HorizontalAlignment="Right" VerticalAlignment="Center"
-                 Margin="0,0,8,0"
-                 Text="{DynamicResource Text.Svn.Update.Url}"/>
-      <TextBlock Grid.Row="0" Grid.Column="1"
-                 VerticalAlignment="Center"
-                 Text="{Binding Url}"
-                 TextTrimming="CharacterEllipsis"
-                 ToolTip.Tip="{Binding Url}"/>
-
-      <TextBlock Grid.Row="1" Grid.Column="0"
-                 HorizontalAlignment="Right" VerticalAlignment="Center"
-                 Margin="0,0,8,0"
-                 Text="{DynamicResource Text.Svn.Update.Revision}"/>
-      <TextBlock Grid.Row="1" Grid.Column="1"
-                 VerticalAlignment="Center"
-                 FontFamily="{DynamicResource Fonts.Monospace}"
-                 Text="{Binding TargetRevisionName}"/>
-    </Grid>
-
-    <!-- Updated Items -->
-    <ListBox Grid.Row="2"
-             x:Name="EntriesList"
-             Margin="8,8,8,0"
-             Padding="0,2"
-             Background="{DynamicResource Brush.Contents}"
-             BorderThickness="1"
-             BorderBrush="{DynamicResource Brush.Border2}"
-             ItemsSource="{Binding Entries}"
-             SelectionMode="Single"
-             KeyDown="OnEntriesKeyDown"
-             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-             ScrollViewer.VerticalScrollBarVisibility="Auto">
-      <ListBox.Styles>
-        <Style Selector="ListBoxItem">
-          <Setter Property="Margin" Value="0"/>
-          <Setter Property="Padding" Value="0"/>
-          <Setter Property="Height" Value="24"/>
-        </Style>
-      </ListBox.Styles>
-
-      <ListBox.ItemsPanel>
-        <ItemsPanelTemplate>
-          <VirtualizingStackPanel Orientation="Vertical"/>
-        </ItemsPanelTemplate>
-      </ListBox.ItemsPanel>
-
-      <ListBox.ItemTemplate>
-        <DataTemplate DataType="m:SvnUpdateEntry">
-          <Grid ColumnDefinitions="Auto,*" Background="Transparent" ContextRequested="OnEntryContextRequested">
-            <TextBlock Grid.Column="0"
-                       Width="80"
-                       Margin="8,0,0,0"
-                       VerticalAlignment="Center"
-                       Classes="bold"
-                       Text="{Binding Action, Converter={x:Static c:SvnUpdateActionConverters.ToName}}"
-                       Foreground="{Binding Action, Converter={x:Static c:SvnUpdateActionConverters.ToBrush}}"
-                       IsVisible="{Binding IsFile}"/>
-
-            <TextBlock Grid.Column="1"
-                       Margin="8,0"
-                       VerticalAlignment="Center"
-                       FontFamily="{DynamicResource Fonts.Monospace}"
-                       Text="{Binding Path}"
-                       TextTrimming="CharacterEllipsis"
-                       Classes.message="{Binding !IsFile}"
-                       Classes.error="{Binding IsError}"
-                       ToolTip.Tip="{Binding Path}"/>
-          </Grid>
-        </DataTemplate>
-      </ListBox.ItemTemplate>
-    </ListBox>
-
-    <!-- Status and Buttons -->
-    <Grid Grid.Row="3" Margin="12,8,8,8" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
-      <Grid Grid.Row="0" Grid.Column="0" ColumnDefinitions="Auto,*">
-        <Grid Grid.Column="0" Width="14" Height="14" Margin="0,0,6,0" VerticalAlignment="Center">
-          <v:LoadingIcon Width="14" Height="14" IsVisible="{Binding IsRunning}"/>
-          <Path Width="14" Height="14" Data="{StaticResource Icons.Check}" Fill="LimeGreen">
-            <Path.IsVisible>
-              <MultiBinding Converter="{x:Static BoolConverters.And}">
-                <Binding Path="!IsRunning"/>
-                <Binding Path="!IsFailed"/>
-              </MultiBinding>
-            </Path.IsVisible>
-          </Path>
-          <Path Width="14" Height="14" Data="{StaticResource Icons.Error}" Fill="Red">
-            <Path.IsVisible>
-              <MultiBinding Converter="{x:Static BoolConverters.And}">
-                <Binding Path="!IsRunning"/>
-                <Binding Path="IsFailed"/>
-              </MultiBinding>
-            </Path.IsVisible>
-          </Path>
-        </Grid>
-
-        <TextBlock Grid.Column="1"
-                   VerticalAlignment="Center"
-                   Text="{Binding StatusMessage}"
+    <Border Grid.Row="1"
+            Margin="12,12,12,0" Padding="12,8"
+            Background="{DynamicResource Brush.SubPanel}"
+            BorderThickness="1" BorderBrush="{DynamicResource Brush.Border2}"
+            CornerRadius="6">
+      <Grid RowDefinitions="26,26" ColumnDefinitions="Auto,*">
+        <TextBlock Grid.Row="0" Grid.Column="0"
+                   Margin="0,0,12,0"
+                   Foreground="{DynamicResource Brush.FG2}"
+                   Text="{DynamicResource Text.Svn.Update.Url}"/>
+        <TextBlock Grid.Row="0" Grid.Column="1"
+                   HorizontalAlignment="Stretch"
+                   Text="{Binding Url}"
                    TextTrimming="CharacterEllipsis"
-                   Classes.error="{Binding IsFailed}"
-                   ToolTip.Tip="{Binding StatusMessage}"/>
+                   ToolTip.Tip="{Binding Url}"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0"
+                   Margin="0,0,12,0"
+                   Foreground="{DynamicResource Brush.FG2}"
+                   Text="{DynamicResource Text.Svn.Update.Revision}"/>
+        <Border Grid.Row="1" Grid.Column="1"
+                Padding="8,2"
+                HorizontalAlignment="Left" VerticalAlignment="Center"
+                CornerRadius="4"
+                Background="{DynamicResource Brush.Badge}">
+          <TextBlock FontFamily="{DynamicResource Fonts.Monospace}"
+                     Foreground="{DynamicResource Brush.BadgeFG}"
+                     Text="{Binding TargetRevisionName}"/>
+        </Border>
+      </Grid>
+    </Border>
+
+    <!-- Updated items -->
+    <Grid Grid.Row="2" Margin="12,12,12,0" RowDefinitions="30,*" MinHeight="0">
+      <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
+        <Path Grid.Column="0" Width="14" Height="14"
+              Margin="0,0,6,0"
+              Fill="{DynamicResource Brush.FG2}"
+              Data="{StaticResource Icons.Changes}"/>
+        <TextBlock Grid.Column="1" Classes="bold"
+                   Foreground="{DynamicResource Brush.FG2}"
+                   Text="{DynamicResource Text.Svn.UpdateProgress.Activity}"/>
       </Grid>
 
-      <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="20,4,0,0">
-        <TextBlock Classes="small message" Text="{Binding Summary}"/>
-        <TextBlock Classes="small"
-                   Margin="16,0,0,0"
-                   Foreground="OrangeRed"
-                   Text="{DynamicResource Text.Svn.UpdateProgress.Conflicts}"
-                   IsVisible="{Binding HasConflicts}"/>
-      </StackPanel>
+      <Border Grid.Row="1"
+              Background="{DynamicResource Brush.Contents}"
+              BorderThickness="1" BorderBrush="{DynamicResource Brush.Border2}"
+              CornerRadius="6" ClipToBounds="True">
+        <ListBox x:Name="EntriesList"
+                 Classes="repo_left_content_list"
+                 Padding="0,2"
+                 Background="{DynamicResource Brush.Contents}"
+                 ItemsSource="{Binding Entries}"
+                 SelectionMode="Single"
+                 KeyDown="OnEntriesKeyDown">
+          <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+              <Setter Property="Margin" Value="0"/>
+              <Setter Property="Padding" Value="0"/>
+              <Setter Property="Height" Value="28"/>
+            </Style>
+          </ListBox.Styles>
 
-      <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-              Classes="flat"
-              Width="100" Height="30"
-              Margin="8,0,0,0"
-              VerticalAlignment="Center"
-              HorizontalContentAlignment="Center"
-              VerticalContentAlignment="Center"
-              Content="{DynamicResource Text.Cancel}"
-              Click="OnCancelClicked"
-              IsVisible="{Binding IsRunning}"/>
+          <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+              <VirtualizingStackPanel Orientation="Vertical"/>
+            </ItemsPanelTemplate>
+          </ListBox.ItemsPanel>
 
-      <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
-              Classes="flat primary"
-              Width="100" Height="30"
-              Margin="8,0,0,0"
-              VerticalAlignment="Center"
-              HorizontalContentAlignment="Center"
-              VerticalContentAlignment="Center"
-              Content="{DynamicResource Text.Close}"
-              Click="OnCloseClicked"
-              IsVisible="{Binding !IsRunning}"/>
+          <ListBox.ItemTemplate>
+            <DataTemplate DataType="m:SvnUpdateEntry">
+              <Grid Background="Transparent" ContextRequested="OnEntryContextRequested">
+                <Grid ColumnDefinitions="4,88,*"
+                      Margin="12,0,8,0"
+                      IsVisible="{Binding IsFile}">
+                  <Border Grid.Column="0"
+                          Width="3" Height="14"
+                          VerticalAlignment="Center"
+                          CornerRadius="2"
+                          Background="{Binding Action, Converter={x:Static c:SvnUpdateActionConverters.ToBrush}}"/>
+                  <TextBlock Grid.Column="1"
+                             Margin="8,0,0,0"
+                             Foreground="{DynamicResource Brush.FG2}"
+                             Text="{Binding Action, Converter={x:Static c:SvnUpdateActionConverters.ToName}}"
+                             TextTrimming="CharacterEllipsis"/>
+                  <TextBlock Grid.Column="2"
+                             HorizontalAlignment="Stretch"
+                             FontFamily="{DynamicResource Fonts.Monospace}"
+                             Text="{Binding Path}"
+                             TextTrimming="CharacterEllipsis"
+                             ToolTip.Tip="{Binding Path}"/>
+                </Grid>
+
+                <Grid ColumnDefinitions="Auto,*"
+                      Margin="12,0,8,0"
+                      IsVisible="{Binding !IsFile}">
+                  <Path Grid.Column="0"
+                        Width="14" Height="14"
+                        Margin="0,0,6,0"
+                        Fill="Red"
+                        Data="{StaticResource Icons.Error}"
+                        IsVisible="{Binding IsError}"/>
+                  <TextBlock Grid.Column="1"
+                             HorizontalAlignment="Stretch"
+                             Margin="6,0,0,0"
+                             Text="{Binding Path}"
+                             TextTrimming="CharacterEllipsis"
+                             Classes.message="{Binding !IsError}"
+                             Classes.error="{Binding IsError}"
+                             ToolTip.Tip="{Binding Path}"/>
+                </Grid>
+              </Grid>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+      </Border>
     </Grid>
+
+    <!-- Status and actions -->
+    <Border Grid.Row="3"
+            Margin="0,12,0,0"
+            Background="{DynamicResource Brush.SubPanel}"
+            BorderThickness="0,1,0,0"
+            BorderBrush="{DynamicResource Brush.Border0}">
+      <Grid Margin="12,10" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+        <Grid Grid.Row="0" Grid.Column="0" ColumnDefinitions="Auto,*">
+          <Grid Grid.Column="0" Width="14" Height="14" Margin="0,0,6,0" VerticalAlignment="Top">
+            <v:LoadingIcon Width="14" Height="14" IsVisible="{Binding IsRunning}"/>
+            <Path Width="14" Height="14" Data="{StaticResource Icons.Check}"
+                  Fill="LimeGreen" IsVisible="{Binding IsSucceeded}"/>
+            <Path Width="14" Height="14" Data="{StaticResource Icons.Error}"
+                  Fill="Red" IsVisible="{Binding IsFailed}"/>
+            <Path Width="14" Height="14" Data="{StaticResource Icons.Info}"
+                  Fill="{DynamicResource Brush.FG2}" IsVisible="{Binding IsCanceled}"/>
+          </Grid>
+
+          <TextBlock Grid.Column="1"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                     Text="{Binding StatusMessage}"
+                     TextWrapping="Wrap"
+                     Classes.error="{Binding IsFailed}"
+                     ToolTip.Tip="{Binding StatusMessage}"/>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Grid.Column="0"
+                   Margin="20,4,0,0"
+                   HorizontalAlignment="Stretch"
+                   Classes="small message"
+                   Text="{Binding Summary}"
+                   TextWrapping="Wrap"/>
+
+        <Grid Grid.Row="2" Grid.Column="0"
+              Margin="20,4,0,0"
+              ColumnDefinitions="Auto,*"
+              IsVisible="{Binding HasConflicts}">
+          <Path Grid.Column="0" Width="12" Height="12"
+                Margin="0,2,6,0" VerticalAlignment="Top"
+                Data="{StaticResource Icons.Error}" Fill="OrangeRed"/>
+          <TextBlock Grid.Column="1"
+                     HorizontalAlignment="Stretch"
+                     Foreground="OrangeRed"
+                     Text="{DynamicResource Text.Svn.UpdateProgress.Conflicts}"
+                     TextWrapping="Wrap"/>
+        </Grid>
+
+        <Button Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                Classes="flat"
+                Width="100" Height="30"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                Content="{DynamicResource Text.Cancel}"
+                Click="OnCancelClicked"
+                IsEnabled="{Binding !IsCanceling}"
+                IsVisible="{Binding IsRunning}"/>
+
+        <Button Grid.Row="0" Grid.RowSpan="3" Grid.Column="1"
+                Classes="flat primary"
+                Width="100" Height="30"
+                Margin="12,0,0,0"
+                VerticalAlignment="Center"
+                Content="{DynamicResource Text.Close}"
+                Click="OnCloseClicked"
+                IsVisible="{Binding !IsRunning}"/>
+      </Grid>
+    </Border>
   </Grid>
 </v:ChromelessWindow>

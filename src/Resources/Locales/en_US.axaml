@@ -1033,6 +1033,7 @@
   <x:String x:Key="Text.Svn.UpdateProgress.Action.Restored" xml:space="preserve">Restored</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Action.Skipped" xml:space="preserve">Skipped</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Action.Updated" xml:space="preserve">Updated</x:String>
+  <x:String x:Key="Text.Svn.UpdateProgress.Activity" xml:space="preserve">Update activity</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Canceled" xml:space="preserve">Canceled. The working copy may be locked, please run 'svn cleanup' if needed.</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Canceling" xml:space="preserve">Canceling...</x:String>
   <x:String x:Key="Text.Svn.UpdateProgress.Conflicts" xml:space="preserve">Conflicts occurred, please resolve them before committing.</x:String>
