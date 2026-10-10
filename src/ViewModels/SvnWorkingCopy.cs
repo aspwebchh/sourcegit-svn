@@ -268,6 +268,13 @@ namespace SourceGit.ViewModels
                 _repo.ShowPopup(new SvnDeleteUnversioned(_repo, unversioned));
         }
 
+        public async Task ClearCommitMessageHistoryAsync()
+        {
+            var sure = await App.AskConfirmAsync(App.Text("WorkingCopy.ClearCommitHistories.Confirm"));
+            if (sure)
+                _repo.UIStates.RecentCommitMessages.Clear();
+        }
+
         public async Task CommitAsync()
         {
             if (_isCommitting)
@@ -287,6 +294,8 @@ namespace SourceGit.ViewModels
             }
 
             IsCommitting = true;
+            _repo.UIStates.AddRecentCommitMessage(_commitMessage);
+
             var succ = true;
             var log = _repo.CreateLog("Commit");
 

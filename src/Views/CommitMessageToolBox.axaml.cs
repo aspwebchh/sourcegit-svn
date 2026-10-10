@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -467,6 +468,18 @@ namespace SourceGit.Views
             set => SetAndRaise(ShowAdvancedOptionsProperty, ref _showAdvancedOptions, value);
         }
 
+        public static readonly DirectProperty<CommitMessageToolBox, bool> ShowCommitMessagePickerProperty =
+            AvaloniaProperty.RegisterDirect<CommitMessageToolBox, bool>(
+                nameof(ShowCommitMessagePicker),
+                static o => o.ShowCommitMessagePicker,
+                static (o, v) => o.ShowCommitMessagePicker = v);
+
+        public bool ShowCommitMessagePicker
+        {
+            get => _showCommitMessagePicker;
+            set => SetAndRaise(ShowCommitMessagePickerProperty, ref _showCommitMessagePicker, value);
+        }
+
         public static readonly DirectProperty<CommitMessageToolBox, string> CommitMessageProperty =
             AvaloniaProperty.RegisterDirect<CommitMessageToolBox, string>(
                 nameof(CommitMessage),
@@ -561,70 +574,83 @@ namespace SourceGit.Views
                 }
 
                 menu.Items.Add(new MenuItem() { Header = "-" });
-
-                var historiesCount = repo.UIStates.RecentCommitMessages.Count;
-                if (historiesCount == 0)
-                {
-                    menu.Items.Add(new MenuItem()
-                    {
-                        Header = App.Text("WorkingCopy.NoCommitHistories"),
-                        Icon = this.CreateMenuIcon("Icons.Histories"),
-                        IsEnabled = false
-                    });
-                }
-                else
-                {
-                    for (int i = 0; i < historiesCount; i++)
-                    {
-                        var dup = repo.UIStates.RecentCommitMessages[i].Trim();
-                        var header = new TextBlock()
-                        {
-                            Text = dup.ReplaceLineEndings(" "),
-                            VerticalAlignment = VerticalAlignment.Center,
-                            TextTrimming = TextTrimming.CharacterEllipsis
-                        };
-
-                        var icon = this.CreateMenuIcon("Icons.Histories");
-                        icon.Fill = foreground;
-
-                        var item = new MenuItem();
-                        item.Header = header;
-                        item.Icon = icon;
-                        item.Click += (_, ev) =>
-                        {
-                            vm.CommitMessage = dup;
-                            ev.Handled = true;
-                        };
-
-                        menu.Items.Add(item);
-                    }
-
-                    menu.Items.Add(new MenuItem() { Header = "-" });
-
-                    var clearIcon = this.CreateMenuIcon("Icons.Clear");
-                    clearIcon.Fill = foreground;
-
-                    var clearHistoryItem = new MenuItem();
-                    clearHistoryItem.Header = App.Text("WorkingCopy.ClearCommitHistories");
-                    clearHistoryItem.Icon = clearIcon;
-                    clearHistoryItem.Click += async (_, ev) =>
-                    {
-                        await vm.ClearCommitMessageHistoryAsync();
-                        ev.Handled = true;
-                    };
-
-                    menu.Items.Add(clearHistoryItem);
-                }
-
-                button.IsEnabled = false;
-                menu.Placement = PlacementMode.TopEdgeAlignedLeft;
-                menu.HorizontalOffset = -2;
-                menu.VerticalOffset = 1;
-                menu.Closed += (_, _) => button.IsEnabled = true;
-                menu.Open(button);
+                AddCommitHistoryMenuItems(menu, repo.UIStates.RecentCommitMessages, vm.ClearCommitMessageHistoryAsync);
+                OpenCommitMessagePicker(button, menu);
+            }
+            else if (sender is Button svnButton && DataContext is ViewModels.SvnWorkingCopy svn)
+            {
+                var menu = new ContextMenu() { MaxWidth = 480 };
+                AddCommitHistoryMenuItems(menu, svn.Repository.UIStates.RecentCommitMessages, svn.ClearCommitMessageHistoryAsync);
+                OpenCommitMessagePicker(svnButton, menu);
             }
 
             e.Handled = true;
+        }
+
+        private void AddCommitHistoryMenuItems(ContextMenu menu, List<string> histories, Func<Task> clearAsync)
+        {
+            if (histories.Count == 0)
+            {
+                menu.Items.Add(new MenuItem()
+                {
+                    Header = App.Text("WorkingCopy.NoCommitHistories"),
+                    Icon = this.CreateMenuIcon("Icons.Histories"),
+                    IsEnabled = false
+                });
+                return;
+            }
+
+            var foreground = this.FindResource("Brush.FG1") as IBrush;
+            foreach (var message in histories)
+            {
+                var dup = message.Trim();
+                var header = new TextBlock()
+                {
+                    Text = dup.ReplaceLineEndings(" "),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    TextTrimming = TextTrimming.CharacterEllipsis
+                };
+
+                var icon = this.CreateMenuIcon("Icons.Histories");
+                icon.Fill = foreground;
+
+                var item = new MenuItem();
+                item.Header = header;
+                item.Icon = icon;
+                item.Click += (_, ev) =>
+                {
+                    CommitMessage = dup;
+                    ev.Handled = true;
+                };
+
+                menu.Items.Add(item);
+            }
+
+            menu.Items.Add(new MenuItem() { Header = "-" });
+
+            var clearIcon = this.CreateMenuIcon("Icons.Clear");
+            clearIcon.Fill = foreground;
+
+            var clearHistoryItem = new MenuItem();
+            clearHistoryItem.Header = App.Text("WorkingCopy.ClearCommitHistories");
+            clearHistoryItem.Icon = clearIcon;
+            clearHistoryItem.Click += async (_, ev) =>
+            {
+                await clearAsync();
+                ev.Handled = true;
+            };
+
+            menu.Items.Add(clearHistoryItem);
+        }
+
+        private static void OpenCommitMessagePicker(Button button, ContextMenu menu)
+        {
+            button.IsEnabled = false;
+            menu.Placement = PlacementMode.TopEdgeAlignedLeft;
+            menu.HorizontalOffset = -2;
+            menu.VerticalOffset = 1;
+            menu.Closed += (_, _) => button.IsEnabled = true;
+            menu.Open(button);
         }
 
         private void OnOpenOpenAIHelper(object sender, RoutedEventArgs e)
@@ -713,5 +739,6 @@ namespace SourceGit.Views
 
         private string _commitMessage = string.Empty;
         private bool _showAdvancedOptions = false;
+        private bool _showCommitMessagePicker = false;
     }
 }

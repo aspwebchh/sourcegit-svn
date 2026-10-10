@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
@@ -80,6 +81,12 @@ namespace SourceGit.ViewModels
             private set;
         }
 
+        public Models.RepositoryUIStates UIStates
+        {
+            get;
+            private set;
+        }
+
         public SvnRepository(string path)
         {
             FullPath = path;
@@ -87,12 +94,13 @@ namespace SourceGit.ViewModels
 
         public void Open()
         {
+            var wcRoot = Commands.SvnQueryInfo.FindWorkingCopyRoot(FullPath) ?? FullPath;
+            UIStates = Models.RepositoryUIStates.Load(Path.Combine(wcRoot, ".svn"));
             Histories = new SvnHistories(this);
             WorkingCopy = new SvnWorkingCopy(this);
 
             try
             {
-                var wcRoot = Commands.SvnQueryInfo.FindWorkingCopyRoot(FullPath) ?? FullPath;
                 _watcher = new Models.SvnWatcher(FullPath, wcRoot, RefreshWorkingCopyChanges, OnDatabaseChanged);
             }
             catch (Exception ex)
@@ -107,6 +115,8 @@ namespace SourceGit.ViewModels
 
         public void Close()
         {
+            UIStates?.Save();
+
             _watcher?.Dispose();
             _watcher = null;
 

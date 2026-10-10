@@ -221,6 +221,7 @@
       <!-- Commit Message -->
       <v:CommitMessageToolBox Grid.Row="2"
                               ShowAdvancedOptions="False"
+                              ShowCommitMessagePicker="True"
                               CommitMessage="{Binding CommitMessage, Mode=TwoWay}"/>
 
       <!-- Commit Options -->

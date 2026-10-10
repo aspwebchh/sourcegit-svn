@@ -94,8 +94,13 @@
                   Width="28"
                   Margin="0,0,4,0" Padding="0"
                   Click="OnOpenCommitMessagePicker"
-                  IsVisible="{Binding #ThisControl.ShowAdvancedOptions}"
                   ToolTip.Tip="{DynamicResource Text.WorkingCopy.CommitMessageHelper}">
+            <Button.IsVisible>
+              <MultiBinding Converter="{x:Static BoolConverters.Or}">
+                <Binding Path="#ThisControl.ShowAdvancedOptions"/>
+                <Binding Path="#ThisControl.ShowCommitMessagePicker"/>
+              </MultiBinding>
+            </Button.IsVisible>
             <Path Width="12" Height="12" Data="{StaticResource Icons.Menu}"/>
           </Button>
 
